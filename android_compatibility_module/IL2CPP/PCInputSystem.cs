@@ -3,7 +3,6 @@ using NeoModLoader.constants;
 using NeoModLoader.services;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.UI;
 using static NeoModLoader.AndroidCompatibilityModule.Converter;
 using Vector2 = UnityEngine.Vector2;
 using Vector = System.Numerics.Vector2;
@@ -243,6 +242,13 @@ public class Helper
         return KeyCode.None;
     }
 }
+public enum TouchState
+{
+    NoTouch,
+    InWindow,
+    Touch,
+    MissTouch
+}
 public class PCInputSystem : WrappedBehaviour
 {
     public static KeyState GetState(KeyCode Code)
@@ -269,10 +275,13 @@ public class PCInputSystem : WrappedBehaviour
     }
     public static PCInputSystem Instance { get; private set; }
     public static bool Editing { get; private set; }
+
+    #region  GUI
     private static Rect MainButton;
     private static Rect MainWindow;
     private static GUI.WindowFunction MainWindowFunction;
     private static PCInputConfig Config;
+    #endregion
     public static void Init()
     {
         Harmony.CreateAndPatchAll(typeof(PCInputPatches), Others.harmony_id);
@@ -284,7 +293,7 @@ public class PCInputSystem : WrappedBehaviour
     static void InitGUI()
     {
         MainWindowFunction = C<GUI.WindowFunction>(ManagePCInputs);
-        MainButton = new Rect(Screen.width-100, 0,100, 100);
+        MainButton = new Rect(0, 0,75, 75);
         MainWindow = new Rect(0, 0, Screen.width/2.5f, Screen.height/5);
     }
 
@@ -293,35 +302,47 @@ public class PCInputSystem : WrappedBehaviour
         PCButtonSettings.ToSettings(Config).SaveToPath(Path);
     }
 
-    void BeginEditing()
+    static void BeginEditing()
     {
         global::Config.paused = true;
+        Editing = true;
     }
 
-    void StopEditing()
+    static void StopEditing()
     {
         global::Config.paused = false;
         global::Config.ui_main_hidden = false;
+        Editing = false;
     }
-    private void OnGUI()
+
+    void DrawButtons()
     {
         foreach (var pair in Config.Inputs)
         {
             var button = pair.Value;
-            GUI.Box(button.ButtonRect, button.Name);
-        }
-        if (GUI.Button(MainButton, "PCInput"))
-        {
-            Editing = !Editing;
-            if (Editing)
+            var state = button.State;
+
+            Rect rect = button.ButtonRect;
+
+            bool pressed = state == KeyState.Hold || state == KeyState.Pressed;
+
+            if (pressed || SelectedInput == button)
             {
-                BeginEditing();
+                rect.x -= 5;
+                rect.y -= 5;
+                rect.width += 5;
+                rect.height += 5;
+                GUI.Box(rect, button.Name);
             }
             else
             {
-                StopEditing();
+                GUI.Box(rect, button.Name);
             }
         }
+    }
+    private void OnGUI()
+    {
+        DrawButtons();
         if (Editing)
         {
             global::Config.ui_main_hidden = true;
@@ -330,10 +351,15 @@ public class PCInputSystem : WrappedBehaviour
         }
         else
         {
+            if (GUI.Button(MainButton, "PCInput"))
+            {
+                BeginEditing();
+            }
             CheckInputs();
         }
     }
-    static PCInput SelectedInput;
+
+    private static PCInput SelectedInput;
     void CheckInputs()
     {
         foreach (var pair in Config.Inputs)
@@ -356,7 +382,9 @@ public class PCInputSystem : WrappedBehaviour
             }
 
             if (inside)
+            {
                 button.Press();
+            }
             else
                 button.Release();
         }
@@ -400,20 +428,14 @@ public class PCInputSystem : WrappedBehaviour
 
         GUILayout.EndScrollView();
     }
-
-    enum TouchState
+    
+    public static TouchState CheckTouch(out Vector2 pos, out PCInput selected)
     {
-        NoTouch,
-        InWindow,
-        Touch,
-        MissTouch
-    }
-    static TouchState CheckTouch()
-    {
+        selected = null;
+        pos = default;
         if (Input.touchCount == 0) return TouchState.NoTouch;
-        
         var touch = Input.GetTouch(0);
-        var pos = touch.position;
+        pos = touch.position;
         pos.y = Screen.height - pos.y;
         if (MainWindow.Contains(pos))
         {
@@ -425,7 +447,7 @@ public class PCInputSystem : WrappedBehaviour
 
             if (button.ButtonRect.Contains(pos))
             {
-                SelectedInput = button;
+                selected = button;
                 return TouchState.Touch;
             }
         }
@@ -435,26 +457,34 @@ public class PCInputSystem : WrappedBehaviour
     private TouchState PrevState;
     void MoveInputs()
     {
-        var state = CheckTouch();
+        var state = CheckTouch(out var pos, out var selected);
         if (state != TouchState.Touch)
         {
-            switch (state)
+            if (state == TouchState.MissTouch)
             {
-                case TouchState.MissTouch when PrevState == TouchState.NoTouch:
+                if (PrevState == TouchState.NoTouch)
+                {
                     SelectedInput = null;
-                    PrevState = state;
-                    return;
-                case TouchState.InWindow:
-                case TouchState.NoTouch:
-                    PrevState = state;
-                    return;
+                }
+            }
+            else
+            {
+                PrevState = state;
+                return;
             }
         }
-        if (SelectedInput == null) return;
-        var touch = Input.GetTouch(0);
-        var pos = touch.position;
-        pos.y = Screen.height - pos.y;
-        SelectedInput.SetPos(pos - SelectedInput.ButtonRect.size/2);
+        else if(SelectedInput == null)
+        {
+            SelectedInput = selected;
+            currentY = SelectedInput.ButtonRect.size.y;
+            currentX =  SelectedInput.ButtonRect.size.x;
+        }
+        else if (PrevState == TouchState.NoTouch && selected != SelectedInput)
+        {
+            SelectedInput = null;
+        }
+        PrevState = state;
+        SelectedInput?.SetPos(pos - SelectedInput.ButtonRect.size/2);
     }
     public static PCInput CreateNewButton(string Name, KeyCode Code, Rect rect = default)
     {
@@ -471,6 +501,10 @@ public class PCInputSystem : WrappedBehaviour
     private static float currentY = 50;
     static void ManagePCInputs(int windowid)
     {
+        if (GUILayout.Button("Stop Editing"))
+        {
+            StopEditing();
+        }
         if (GUILayout.Button("Save Settings"))
         {
             SaveConfig(Paths.PCInputConfigPath);

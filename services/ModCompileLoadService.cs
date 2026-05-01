@@ -532,7 +532,6 @@ public static class ModCompileLoadService
                 try
                 {
                     object main_component;
-                    #if IL2CPP
                     if (type.GetInterface(nameof(IMod)) == null)
                     {
                         mod_interface = mod_instance.AddComponent<AttachedModComponent>();
@@ -543,23 +542,11 @@ public static class ModCompileLoadService
                         mod_interface = (IMod)mod_instance.AddComponent(type);
                         main_component = (WrappedBehaviour)mod_interface;
                     }
-                    #else
-                    if (type.GetInterface(nameof(IMod)) == null){
-                        mod_interface = mod_instance.AddComponent<AttachedModComponent>();
-                        main_component = (MonoBehaviour) mod_instance.AddComponent(type);
-
-                    }
-                    else
-                    {
-                        mod_interface = (IMod)mod_instance.AddComponent(type);
-                        main_component = (MonoBehaviour)mod_interface;
-                    }
-                    #endif
                     LoadLocales(main_component, pMod, false);
 
                     mod_interface.OnLoad(pMod, mod_instance);
                     mod_instance.SetActive(true);
-                    WorldBoxMod.LoadedMods.Add(mod_instance.GetComponent<IMod>());
+                    WorldBoxMod.LoadedMods.Add(mod_instance.GetWrappedComponent<IMod>());
                     any_loaded = true;
                     break;
                 }
