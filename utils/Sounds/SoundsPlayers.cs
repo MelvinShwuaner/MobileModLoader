@@ -1,4 +1,8 @@
-﻿using FMOD;
+﻿#if !IL2CPP
+using FMOD;
+#else
+using Il2CppFMOD;
+#endif
 using NeoModLoader.services;
 using NeoModLoader.utils.Collections;
 using Newtonsoft.Json;
