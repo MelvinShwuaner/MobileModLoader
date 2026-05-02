@@ -151,7 +151,20 @@ public static class WrapperHelper
 	public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true) where T : WrappedBehaviour
 	{ 
 		Il2CPPBehaviour il2cpp = Object.Instantiate(original.Wrapper, parent, worldPositionStays);
+		WrapperResolver.ResolveInstantiate(original.gameObject, il2cpp.gameObject);
 		return (T)il2cpp.WrappedBehaviour;
+	}
+	public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true, bool stub = true) where T : Component
+	{ 
+		Component il2cpp = Object.Instantiate(original, parent, worldPositionStays);
+		WrapperResolver.ResolveInstantiate(original.gameObject, il2cpp.gameObject);
+		return (T)il2cpp;
+	}
+	public static GameObject Instantiate(GameObject original, Transform parent, bool worldPositionStays = true, bool stub = true)
+	{ 
+		GameObject il2cpp = Object.Instantiate(original, parent, worldPositionStays);
+		WrapperResolver.ResolveInstantiate(original, il2cpp);
+		return il2cpp;
 	}
 	public static object GetWrappedComponent(GameObject Object, Type WrappedType)
 	{
@@ -225,9 +238,13 @@ public sealed class WrapperResolver : IDisposable
 			return;
 		}
 		Type WrappedType = orig.WrappedType;
-		if (clone.SlotIndex.Get() == orig.SlotIndex.Get())
+		if (clone.SlotIndex.Value == orig.SlotIndex.Value)
 		{
 			clone.SlotIndex.Set(0); //clone doesn't have to resolve itself now
+		}
+		else if (clone.IsSlotForMe())
+		{
+			return; //clone already resolved itself
 		}
 		WrappedBehaviour cloned = clone.CreateWrapperIfNull(WrappedType);
 		var fields = WrappedType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

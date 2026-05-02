@@ -53,12 +53,18 @@ public sealed class Il2CPPBehaviour : MonoBehaviour
     {
         return SlotIndex > 0 && !Pool.Slots.IsEmpty(SlotIndex);
     }
+
+    [HideFromIl2Cpp]
+    public bool IsSlotForMe()
+    {
+        return Pool.Slots[SlotIndex].Item == this;
+    }
     [HideFromIl2Cpp]
     public void CheckIndex()
     {
         if (IsSlotIndexValid())
         {
-            if (Pool.Slots[SlotIndex].Item != this)
+            if (!IsSlotForMe())
             {
                 CopyFrom(Pool.Slots[SlotIndex].Item);
                 SlotIndex.Set(Pool.Slots.Add(this));

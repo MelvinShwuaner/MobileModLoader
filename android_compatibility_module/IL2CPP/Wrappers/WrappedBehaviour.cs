@@ -94,9 +94,13 @@ public class WrappedBehaviour
     public void StopAllCoroutines(){
         Wrapper.StopAllCoroutines();
     }
-    public static T Instantiate<T>(T obj, Transform parent = null, bool positionstays = false) where T : Object
+    public static T Instantiate<T>(T obj, Transform parent = null, bool positionstays = false) where T : Component
     {
-        return Object.Instantiate(obj, parent, positionstays);
+        return WrapperHelper.Instantiate(obj, parent, positionstays);
+    }
+    public static GameObject Instantiate(GameObject obj, Transform parent = null, bool positionstays = false)
+    {
+        return WrapperHelper.Instantiate(obj, parent, positionstays);
     }
     public static void Destroy(UnityEngine.Object Object)
     {
