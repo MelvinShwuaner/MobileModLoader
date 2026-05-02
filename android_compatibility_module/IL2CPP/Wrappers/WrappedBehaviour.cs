@@ -119,8 +119,4 @@ public class WrappedBehaviour
     {
         return beh.WrappedBehaviour;
     }
-    public WrappedBehaviour()
-    {
-       
-    }
 }
