@@ -150,21 +150,8 @@ public static class WrapperHelper
 	}
 	public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true) where T : WrappedBehaviour
 	{ 
-		Il2CPPBehaviour il2cpp = UnityEngine.Object.Instantiate(original.Wrapper, parent, worldPositionStays);
-		WrapperResolver.ResolveInstantiate(original.Wrapper.gameObject, il2cpp.gameObject);
+		Il2CPPBehaviour il2cpp = Object.Instantiate(original.Wrapper, parent, worldPositionStays);
 		return (T)il2cpp.WrappedBehaviour;
-	}
-	public static GameObject Instantiate(GameObject original, Transform parent, bool worldPositionStays = true)
-	{ 
-		GameObject newobj = UnityEngine.Object.Instantiate(original, parent, worldPositionStays);
-		WrapperResolver.ResolveInstantiate(original, newobj);
-		return newobj;
-	}
-	public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true, bool stub = false) where T : Component
-	{ 
-		T newobj = UnityEngine.Object.Instantiate(original, parent, worldPositionStays);
-		WrapperResolver.ResolveInstantiate(original.gameObject, newobj.gameObject);
-		return newobj;
 	}
 	public static object GetWrappedComponent(GameObject Object, Type WrappedType)
 	{
@@ -233,39 +220,44 @@ public sealed class WrapperResolver : IDisposable
 	public void Clone(Il2CPPBehaviour orig, Il2CPPBehaviour clone)
 	{
 		WrappedBehaviour beh = orig.WrappedBehaviour;
+		if (beh == null)
+		{
+			return;
+		}
 		Type WrappedType = orig.WrappedType;
 		WrappedBehaviour cloned = clone.CreateWrapperIfNull(WrappedType);
 		var fields = WrappedType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 		foreach (var field in fields)
 		{
 			Type type = field.FieldType;
-			if (field.GetValue(beh) == null)
+			var fieldobj = field.GetValue(beh);
+			if (fieldobj == null)
 			{
 				continue;
 			}
 			if (type == typeof(GameObject))
 			{
-				var obj =  (GameObject)field.GetValue(beh);
+				var obj =  (GameObject)fieldobj;
 				field.SetValue(cloned, ResolveGameObject(obj));
 			}
 			else if (type== typeof(Transform))
 			{
-				var obj =  (Transform)field.GetValue(beh);
+				var obj =  (Transform)fieldobj;
 				field.SetValue(cloned, ResolveGameObject(obj.gameObject).transform);
 			}
 			else if (typeof(Component).IsAssignableFrom(type))
 			{
-				var obj =  (Component)field.GetValue(beh);
+				var obj =  (Component)fieldobj;
 				field.SetValue(cloned, ResolveGameObject(obj.gameObject).GetComponent(type, Getindex(obj, obj.gameObject)));
 			}
 			else if (typeof(WrappedBehaviour).IsAssignableFrom(type))
 			{
-				var obj =  (WrappedBehaviour)field.GetValue(beh);
+				var obj =  (WrappedBehaviour)fieldobj;
 				field.SetValue(cloned, ((Il2CPPBehaviour)ResolveGameObject(obj.gameObject).GetComponent(typeof(Il2CPPBehaviour), Getindex(obj.Wrapper, obj.gameObject))).CreateWrapperIfNull(type));
 			}
 			else
 			{
-				field.SetValue(cloned, field.GetValue(beh));
+				field.SetValue(cloned, fieldobj);
 			}
 		}
 	}

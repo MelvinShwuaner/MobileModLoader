@@ -75,7 +75,7 @@ public class WrappedBehaviour
     {
         return Wrapper.GetComponent<C>();
     }
-    public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true) where T : WrappedBehaviour
+    public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true, bool stub = true) where T : WrappedBehaviour
     {
         return WrapperHelper.Instantiate(original, parent, worldPositionStays);
     }
@@ -94,9 +94,9 @@ public class WrappedBehaviour
     public void StopAllCoroutines(){
         Wrapper.StopAllCoroutines();
     }
-    public static GameObject Instantiate(GameObject obj, Transform parent = null, bool positionstays = false)
+    public static T Instantiate<T>(T obj, Transform parent = null, bool positionstays = false) where T : Object
     {
-        return WrapperHelper.Instantiate(obj, parent, positionstays);
+        return Object.Instantiate(obj, parent, positionstays);
     }
     public static void Destroy(UnityEngine.Object Object)
     {

@@ -2,10 +2,8 @@ using System.Reflection;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.Injection;
 using MelonLoader;
-using NeoModLoader.services;
 using NeoModLoader.utils.Collections;
 using UnityEngine;
-using Object = Il2CppSystem.Object;
 
 namespace NeoModLoader.AndroidCompatibilityModule;
 [RegisterTypeInIl2Cpp]
@@ -44,17 +42,14 @@ public sealed class Il2CPPBehaviour : MonoBehaviour
     [HideFromIl2Cpp]
     public void CopyFrom(Il2CPPBehaviour other)
     {
-        WrapperResolver.ResolveInstantiate(gameObject, other.gameObject);
+        WrapperResolver.ResolveInstantiate(other.gameObject, gameObject);
     }
-
+    [HideFromIl2Cpp]
     public bool IsSlotIndexValid()
     {
-        if (SlotIndex == -1)
-        {
-            return false;
-        }
         return !Pool.Slots.IsEmpty(SlotIndex);
     }
+    [HideFromIl2Cpp]
     void CheckIndex()
     {
         if (IsSlotIndexValid())
