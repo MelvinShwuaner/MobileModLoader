@@ -233,7 +233,7 @@ public class PCButtonSettings
         return settings;
     }
 }
-public class Helper
+public static class Helper
 {
     public static KeyCode GetKeyFromString(string name)
     {
@@ -340,8 +340,11 @@ public class PCInputSystem : WrappedBehaviour
             }
         }
     }
+
+    private static GUIStyle BoxStyle;
     private void OnGUI()
     {
+        BoxStyle ??= GUI.skin.box;
         DrawButtons();
         if (Editing)
         {
@@ -492,9 +495,52 @@ public class PCInputSystem : WrappedBehaviour
         {
             return Config.Inputs[Code];
         }
+        if (rect == default)
+        {
+            rect = GetNextButtonRect(GetButtonSize(Name)*2);
+        }
         PCInput input = new PCInput { Name = Name, ButtonRect = rect };
         Config.Inputs.Add(Code, input);
         return input;
+    }
+
+    public static Vector2 GetButtonSize(string Name)
+    {
+        return BoxStyle.CalcSize(new GUIContent(Name));
+    }
+
+    public static Rect GetNextButtonRect(Vector2 Size)
+    {
+        for (int x = 0; x < Screen.width/Size.x; x ++)
+        {
+            for (int y = 0; y < Screen.height / Size.y; y++)
+            {
+                Rect rect = new Rect(x * Size.x, y * Size.y, Size.x, Size.y);
+                if (!DoesRectIntersectAnything(rect))
+                {
+                    return rect;
+                }
+            }
+        }
+
+        return default;
+    }
+
+    public static bool DoesRectIntersectAnything(Rect rect)
+    {
+        if (MainButton.Overlaps(rect) || MainWindow.Overlaps(rect))
+        {
+            return true;
+        }
+
+        foreach (var button in Config.Inputs.Values)
+        {
+            if (button.ButtonRect.Overlaps(rect))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static float currentX = 50;
