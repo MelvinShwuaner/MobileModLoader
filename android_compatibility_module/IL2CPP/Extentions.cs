@@ -330,7 +330,6 @@ public static class Extentions
     {
         return (T) WrapperHelper.GetWrappedComponent(obj, typeof(T));
     }
-
     public static T[] Remove<T>(this T[] arr, T toremove)
     {
         List<T> list = new List<T>(arr);

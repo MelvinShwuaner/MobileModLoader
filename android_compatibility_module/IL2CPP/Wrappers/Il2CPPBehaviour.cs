@@ -14,6 +14,16 @@ public sealed class Il2CPPBehaviour : MonoBehaviour
     /// always start the first index with null because the index is 0 by default
     /// </summary>
     private static SlotList<Il2CPPBehaviour> Pool = [null];
+
+    public static void RemoveFromPool(Il2CPPBehaviour Beh)
+    {
+        Pool.Slots.RemoveAt(Beh.SlotIndex);
+        Beh.SlotIndex = 0;
+    }
+    public static Il2CPPBehaviour GetFromPool(int Index)
+    {
+        return Pool.Slots.Get(Index)?.Item;
+    }
     public Il2CPPBehaviour(IntPtr ptr) : base(ptr)
     {
     }
@@ -39,9 +49,7 @@ public sealed class Il2CPPBehaviour : MonoBehaviour
     }
 
     private bool canawake;
-    /// <summary>
-    /// do not touch this. this is public for Unity to see
-    /// </summary>
+    // do not touch these. these are public for Unity to see
     public Il2CppValueField<int> SlotIndex;
     [HideFromIl2Cpp]
     public void CopyFrom(Il2CPPBehaviour other)

@@ -71,6 +71,14 @@ public class WrappedBehaviour
     }
     [JsonIgnore]
     public Il2CPPBehaviour Wrapper { get; internal set; }
+    /// <summary>
+    /// blocks the wrapped behaviour from resolving itself when instantiated, should be used when this is not the root of its prefab
+    /// </summary>
+    /// <remarks>if Awake() is called after this, the Wrapper will re-add itself to the pool and will resolve itself</remarks>
+    public void DontResolveSelf()
+    {
+        Il2CPPBehaviour.RemoveFromPool(Wrapper);
+    }
     public C GetComponent<C>() where C : Component
     {
         return Wrapper.GetComponent<C>();

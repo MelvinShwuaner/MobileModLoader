@@ -508,7 +508,7 @@ public static class ModCompileLoadService
             foreach (var type in mod_assembly.GetTypes())
             {
                 var mod_entry = Attribute.GetCustomAttribute(type, typeof(ModEntry));
-                if (!(type.IsSubclassOf(typeof(WrappedBehaviour)) || type.IsSubclassOf(typeof(MonoBehaviour))) ||
+                if (!type.IsSubclassOf(typeof(WrappedBehaviour)) ||
                     (type.GetInterface(nameof(IMod)) == null && mod_entry == null) || type.IsAbstract) continue;
                 mod_instance = new GameObject(pMod.Name)
                 {
