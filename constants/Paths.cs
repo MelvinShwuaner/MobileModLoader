@@ -60,7 +60,7 @@ public static class Paths
     ///     Path to file of auto update module
     /// </summary>
     public static readonly string NMLAutoUpdateModulePath =
-        Combine(NativeModsPath, "NeoModLoader.AutoUpdate_memload.dll");
+        Combine(NativeModsPath, Others.IsAndroid ? "NeoModLoader.AutoUpdate_mobile_memload.dll" : "NeoModLoader.AutoUpdate_memload.dll");
 
     /// <summary>
     /// Path to the publicized Assembly-CSharp.dll file, on android this is used as IL replacements for transpiler support

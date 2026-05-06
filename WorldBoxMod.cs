@@ -386,7 +386,7 @@ public class WorldBoxMod : MonoBehaviour
         if (!File.Exists(Paths.NMLAutoUpdateModulePath))
         {
             using Stream stream = NeoModLoaderAssembly.GetManifestResourceStream(
-                $"NeoModLoader{name}.resources.assemblies.NeoModLoader.AutoUpdate.dll");
+                $"NeoModLoader{name}.resources.assemblies.NeoModLoader.AutoUpdate{name}.dll");
             using var file = new FileStream(Paths.NMLAutoUpdateModulePath, FileMode.CreateNew, FileAccess.Write);
             stream.CopyTo(file);
         }
