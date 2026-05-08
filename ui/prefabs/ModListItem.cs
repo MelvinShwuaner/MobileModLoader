@@ -46,7 +46,7 @@ internal class ModListItem : APrefab<ModListItem>
         };
         text.text = $"{mod_name}\n{mod_author}\n{LM.Get(mod_state)}";
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(C<UnityAction>(() => {pAction?.Invoke();}));
+        button.onClick.AddListener(() => {pAction?.Invoke();});
     }
 
     private static void _init()

@@ -101,6 +101,9 @@
       <Reference Include="UnityEngine.ImageConversionModule">
         <HintPath>assembly-dependencies\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>assembly-dependencies\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.InputLegacyModule">
         <HintPath>assembly-dependencies\UnityEngine.InputLegacyModule.dll</HintPath>
       </Reference>

@@ -29,8 +29,4 @@ public static class Others
             return false;
         }
     }
-    /// <summary>
-    /// if the game is currently on android.
-    /// </summary>
-    public static bool IsAndroid => Config.isAndroid;
 }

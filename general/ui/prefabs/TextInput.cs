@@ -45,7 +45,7 @@ public class TextInput : APrefab<TextInput>
     /// <param name="value_update">Callback when value updated</param>
     /// <param name="pIcon">icon at the right</param>
     /// <param name="pBackground"></param>
-    public virtual void Setup(string value, UnityAction<string> value_update, Sprite pIcon = null,
+    public virtual void Setup(string value, Action<string> value_update, Sprite pIcon = null,
         Sprite pBackground = null)
     {
         if (!Initialized) Init();

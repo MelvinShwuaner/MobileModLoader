@@ -4,6 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using NeoModLoader.AndroidCompatibilityModule;
 using NeoModLoader.constants;
+using NeoModLoader.utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
 public class ObjectPoolGenericMono<T> where T : WrappedBehaviour
@@ -182,17 +183,22 @@ namespace NeoModLoader.AndroidCompatibilityModule
 				WrapperResolver.ResolveInstantiate(comp.gameObject, clone.Cast<Component>().gameObject);
 			}
 		}
-		public static WrappedAction CreateWrappedAction(MethodInfo method)
+		public static WrappedAction GetWrappedMethod(Type type, string Method)
 		{
-			var param = Expression.Parameter(typeof(WrappedBehaviour), "beh");
-
-			var call = Expression.Call(
-				Expression.Convert(param, method.DeclaringType),
-				method
-			);
-			return Expression.Lambda<WrappedAction>(call, param).Compile();
+			while (type != null)
+			{
+				var method = type.GetMethod(
+					Method,
+					BindingFlags.Instance |
+					BindingFlags.Public |
+					BindingFlags.NonPublic |
+					BindingFlags.DeclaredOnly, Type.EmptyTypes);
+				if (method != null)
+					return ReflectionHelper.AsDelegate<WrappedAction>(method);
+				type = type.BaseType;
+			}
+			return null;
 		}
-
 		public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true)
 			where T : WrappedBehaviour
 		{

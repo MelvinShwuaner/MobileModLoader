@@ -118,7 +118,7 @@ internal class ModUploadAuthenticationWindow : AbstractWindow<ModUploadAuthentic
             button.transform.Find("Icon").GetComponent<RectTransform>().sizeDelta = pIconSize;
         }
 
-        button.onClick.AddListener(C<UnityAction>(() =>
+        button.onClick.AddListener(() =>
         {
             if (pAuthFunc != null)
             {
@@ -129,7 +129,7 @@ internal class ModUploadAuthenticationWindow : AbstractWindow<ModUploadAuthentic
             {
                 AuthSkipped = true;
             }
-        }));
+        });
         var tip_button = button.GetComponent<TipButton>();
         tip_button.textOnClick = pId        + " Title";
         tip_button.text_description_2 = pId + " Description";

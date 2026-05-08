@@ -20,7 +20,6 @@ public static class AndroidHelper
     {
         throw new PlatformNotSupportedException($"{Feature} is not supported on IL2CPP!");
     }
-
     internal static void Init()
     {
         Log("Initializing android support module");

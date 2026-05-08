@@ -1,6 +1,9 @@
+using System.Collections;
 using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace NeoModLoader.AndroidCompatibilityModule;
 
@@ -10,10 +13,22 @@ public static class Extentions
     {
         return obj.GetComponent<T>();
     }
-    public static T GetPointer<T>(this T obj)
-        {
-            return obj;
-        }
+    public static void AddListener(this UnityEvent ev, Action action)
+    {
+        ev.AddListener(() => action());
+    }
+    public static void AddListener<T>(this UnityEvent<T> ev, Action<T> action)
+    {
+        ev.AddListener((T t) => action(t));
+    }
+    public static void setToggleAction(this GodPower button, PowerToggleAction action)
+    {
+        button.toggle_action = action;
+    }
+    public static T Clone<T>(this T obj)
+    {
+        return obj;
+    }
     public static List<Transform> GetChildren(this Transform transform)
     {
         List<Transform> list = new List<Transform>();

@@ -228,8 +228,8 @@ public static class TabManager
 
         Button tab_entry_button = tab_entry.GetComponent<Button>();
         tab_entry_button.onClick = new Button.ButtonClickedEvent();
-        tab_entry_button.onClick.AddListener(C<UnityAction>(() => tab.showTab(tab_entry_button)));
-        tab_entry_button.onClick.AddListener(C<UnityAction>(() => tab_entry.GetComponent<ButtonSfx>().playSound()));
+        tab_entry_button.onClick.AddListener(() => tab.showTab(tab_entry_button));
+        tab_entry_button.onClick.AddListener(() => tab_entry.GetComponent<ButtonSfx>().playSound());
 
         TipButton tab_entry_tip = tab_entry.GetComponent<TipButton>();
         tab_entry_tip.textOnClick = pTitleKey;

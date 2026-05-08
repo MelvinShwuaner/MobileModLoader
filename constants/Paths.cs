@@ -27,17 +27,17 @@ public static class Paths
     /// <summary>
     /// Path to folder StreamingAssets, or base melon path if on android
     /// </summary>
-    public static readonly string StreamingAssetsPath = !Others.IsAndroid ? Application.streamingAssetsPath : GamePath;
+    public static readonly string StreamingAssetsPath = !Config.isAndroid ? Application.streamingAssetsPath : GamePath;
 
     /// <summary>
     /// Path to game native Mods folder
     /// </summary>
-    public static readonly string NativeModsPath = Combine(StreamingAssetsPath, Others.IsAndroid ? "mods" : "Mods");
+    public static readonly string NativeModsPath = Combine(StreamingAssetsPath, Config.isAndroid ? "mods" : "Mods");
 
     /// <summary>
     /// Path to game native Managed folder, on android this is the .NET folder
     /// </summary>
-    public static readonly string ManagedPath = !Others.IsAndroid
+    public static readonly string ManagedPath = !Config.isAndroid
         ? Others.is_editor
             ? Combine(StreamingAssetsPath, "..", ".Managed")
             : Combine(StreamingAssetsPath, "..", "Managed")
@@ -60,7 +60,7 @@ public static class Paths
     ///     Path to file of auto update module
     /// </summary>
     public static readonly string NMLAutoUpdateModulePath =
-        Combine(NativeModsPath, Others.IsAndroid ? "NeoModLoader.AutoUpdate_mobile_memload.dll" : "NeoModLoader.AutoUpdate_memload.dll");
+        Combine(NativeModsPath, Config.isAndroid ? "NeoModLoader.AutoUpdate_mobile_memload.dll" : "NeoModLoader.AutoUpdate_memload.dll");
 
     /// <summary>
     /// Path to the publicized Assembly-CSharp.dll file, on android this is used as IL replacements for transpiler support
@@ -82,7 +82,7 @@ public static class Paths
     /// Path to Mods folder provided by NML
     /// </summary>
     public static readonly string ModsPath =
-        Others.is_editor ? Combine(GamePath, "Assets", "Mods") : Combine(GamePath, Others.IsAndroid ? "NMLMods" : "Mods");
+        Others.is_editor ? Combine(GamePath, "Assets", "Mods") : Combine(GamePath, Config.isAndroid ? "NMLMods" : "Mods");
 
     /// <summary>
     /// Path to extracted Assemblies cache

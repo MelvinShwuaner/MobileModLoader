@@ -50,7 +50,7 @@ public class SliderBar : APrefab<SliderBar>
     /// <param name="min">Min</param>
     /// <param name="max">Max</param>
     /// <param name="value_update">Action when slider value updated</param>
-    public void Setup(float value, float min, float max, UnityAction<float> value_update, Vector2 size = default,
+    public void Setup(float value, float min, float max, Action<float> value_update, Vector2 size = default,
         bool whole_numbers = false)
     {
         if (!Initialized) Init();

@@ -234,11 +234,11 @@ namespace NeoModLoader.utils
             }
             if (Asset.color_hex != null)
             {
-                Asset.color = ((Color32)Toolbox.makeColor(Asset.color_hex)).Nullify();
+                Asset.color = ((Color32)Toolbox.makeColor(Asset.color_hex)).N();
             }
             if (Asset.check_flip == null)
             {
-                Asset.check_flip = C<WorldAction>((BaseSimObject _, WorldTile _) => true);
+                Asset.check_flip = ActionHelper.Default;
             }
             LinkWithAchievment(Asset);
         }

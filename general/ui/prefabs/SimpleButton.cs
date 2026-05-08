@@ -66,7 +66,7 @@ public class SimpleButton : APrefab<SimpleButton>
     /// <param name="pSize">The size of button rect</param>
     /// <param name="pTipType">When it is empty, <see cref="SimpleButton.TipButton" /> will be disabled</param>
     /// <param name="pTipData">TooltipData, it is available only when <paramref name="pTipType" /> is not null or empty</param>
-    public void Setup(UnityAction pClickAction, Sprite pIcon, string pText = null, Vector2 pSize = default,
+    public void Setup(Action pClickAction, Sprite pIcon, string pText = null, Vector2 pSize = default,
         string pTipType = null,
         TooltipData pTipData = default)
     {
@@ -102,11 +102,11 @@ public class SimpleButton : APrefab<SimpleButton>
             this.TipButton.type = pTipType;
             if (string.IsNullOrEmpty(pTipData?.tip_name))
             {
-                TipButton.hoverAction =C<TooltipAction> (TipButton.showTooltipDefault);
+                TipButton.setHoverAction(TipButton.showTooltipDefault);
             }
             else
             {
-                TipButton.hoverAction =C<TooltipAction> (() =>
+                TipButton.setHoverAction(() =>
                 {
                     Tooltip.show(gameObject, TipButton.type, pTipData);
                     transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);

@@ -118,7 +118,7 @@ public abstract class MultiTabWindow<T> : AutoLayoutWindow<T> where T : MultiTab
                                     m_tab_entries_left.childCount > m_tab_entries_right.childCount
                                         ? m_tab_entries_right
                                         : m_tab_entries_left);
-        tab_entry.Setup(C<UnityAction>(() =>
+        tab_entry.Setup(() =>
         {
             foreach (Transform tab in ContentTransform.parent) tab.gameObject.SetActive(false);
             if (tab_entry.Background.color == Color.gray)
@@ -141,7 +141,7 @@ public abstract class MultiTabWindow<T> : AutoLayoutWindow<T> where T : MultiTab
                 tab_entry_pair.Key.Background.color = Color.white;
                 tab_entry_pair.Value.gameObject.SetActive(false);
             }
-        }), pTabIcon, pSize: new Vector2(24, 48), pTipType: "normal", pTipData: new TooltipData
+        }, pTabIcon, pSize: new Vector2(24, 48), pTipType: "normal", pTipData: new TooltipData
         {
             tip_name = pTabID,
             tip_description = pTabID + " Description"

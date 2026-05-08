@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using Il2CppInterop.Runtime;
 using NeoModLoader.services;
 using Newtonsoft.Json;
@@ -81,7 +82,7 @@ public class WrappedBehaviour
     }
     public Coroutine StartCoroutine(IEnumerator enumerator)
     {
-        return Wrapper.StartCoroutine(enumerator.ToIL2CPP());
+        return Wrapper.StartCoroutine(enumerator.C());
     }
     public void StopCoroutine(Coroutine coroutine)
     {
@@ -114,5 +115,53 @@ public class WrappedBehaviour
     public static implicit operator WrappedBehaviour(Il2CPPBehaviour beh)
     {
         return beh.WrappedBehaviour;
+    }
+}
+public class WrappedMethodCollection
+{
+    private static Dictionary<Type, WrappedMethodCollection> collections = new();
+    public static WrappedMethodCollection Get(Type type)
+    {
+        if (collections.TryGetValue(type, out var value))
+        {
+            return value;
+        }
+        value = new WrappedMethodCollection(type);
+        collections[type] = value;
+        return value;
+    }
+    private readonly Type Type;
+    WrappedMethodCollection(Type type)
+    {
+        Type = type;
+    }
+    Dictionary<string, WrappedAction> Methods = new();
+    public WrappedAction this[string Method]
+    {
+        get
+        {
+            if (Methods.TryGetValue(Method, out var wrappedMethod))
+            {
+                return wrappedMethod;
+            }
+            var method = WrapperHelper.GetWrappedMethod(Type, Method);
+            Methods[Method] = method;
+            return method;
+        }
+    }
+}
+//generic version
+public static class WrappedMethodCollection<T> where T : WrappedBehaviour {
+    static Dictionary<string, WrappedAction> Methods = new();
+    private static Type Type = typeof(T);
+    public static WrappedAction Get(string Method)
+    {
+        if (Methods.TryGetValue(Method, out var wrappedMethod))
+        {
+            return wrappedMethod;
+        }
+        var method = WrapperHelper.GetWrappedMethod(Type, Method);
+        Methods[Method] = method;
+        return method;
     }
 }

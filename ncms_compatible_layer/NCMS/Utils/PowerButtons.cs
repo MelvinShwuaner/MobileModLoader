@@ -17,6 +17,13 @@ namespace NCMS.Utils
 
         public static Dictionary<string, PowerButton> CustomButtons = new Dictionary<string, PowerButton>();
         public static Dictionary<string, bool> ToggleValues = new();
+        
+        public static PowerButton CreateButton(string name, Sprite sprite, string title, string description,
+            Vector2 position, ButtonType type = ButtonType.Click,
+            Transform parent = null, Action call = null)
+        {
+           return CreateButton(name, sprite, title, description, position, type, parent, C<UnityAction>(call));
+        }
 
         /// <remarks>
         ///     From [NCMS](https://denq04.github.io/ncms/)
@@ -78,7 +85,7 @@ namespace NCMS.Utils
             // DO NOT catch repeat key exception here. There is a NCMS mod that use it.
             ToggleValues.Add(name, false);
 
-            asButton.onClick.AddListener(C<UnityAction>(() => ToggleButton(name)));
+            asButton.onClick.AddListener(() => ToggleButton(name));
             // Set custom click callback
             if (call != null) asButton.onClick.AddListener(call);
             obj.transform.Find("ToggleIcon").GetComponent<ToggleIcon>().updateIcon(false);

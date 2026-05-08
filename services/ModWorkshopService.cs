@@ -19,7 +19,11 @@ internal static class ModWorkshopService
 
     public static void Init()
     {
-        #if !IL2CPP
+        if (Config.isAndroid)
+        {
+            workshopServiceBackend = new MobileWorkShopService();
+            return;
+        }
         steamWorkshopPromise = RF.GetStaticField<Promise, SteamSDK>("steamInitialized");
         if (Application.platform == RuntimePlatform.WindowsPlayer)
         {
@@ -29,9 +33,6 @@ internal static class ModWorkshopService
         {
             workshopServiceBackend = new ModWorkshopServiceUnix();
         }
-        #else
-        workshopServiceBackend = new MobileWorkShopService();
-        #endif
     }
 
     private static void UploadModLoader(string changelog)

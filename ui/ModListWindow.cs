@@ -53,7 +53,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
             Image workshopButtonImage = workshopButton.GetComponent<Image>();
             workshopButtonImage.sprite = Resources.Load<Sprite>("ui/icons/iconSteam");
             Button workshopButtonButton = workshopButton.GetComponent<Button>();
-            workshopButtonButton.onClick.AddListener(C<UnityAction>(() =>
+            workshopButtonButton.onClick.AddListener(() =>
             {
                 if (Others.is_editor)
                 {
@@ -62,7 +62,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
                 }
 
                 ScrollWindow.showWindow("WorkshopMods");
-            }));
+            });
             TipButton workshopButtonTipButton = workshopButton.GetComponent<TipButton>();
             workshopButtonTipButton.textOnClick = "WorkshopMods Title";
         }
@@ -82,7 +82,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
         modloaderButtonTipButton.text_description_2 = "NMLCommit";
         modloaderButtonTipButton.textOnClickDescription = "NeoModLoader Report";
         Button modloaderButtonButton = modloaderButton.GetComponent<Button>();
-        modloaderButtonButton.onClick.AddListener(C<UnityAction>(() => { Application.OpenURL(CoreConstants.RepoURL); }));
+        modloaderButtonButton.onClick.AddListener(() => { Application.OpenURL(CoreConstants.RepoURL); });
     }
 
     /// <inheritdoc cref="AbstractListWindow{T,TItem}.OnNormalEnable" />
@@ -314,11 +314,11 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
             configure_button.onClick.RemoveAllListeners();
             website_button.onClick.RemoveAllListeners();
             open_folder_button.onClick.RemoveAllListeners();
-            open_folder_button.onClick.AddListener(C<UnityAction>(() => { Application.OpenURL(mod_declare.FolderPath); }));
+            open_folder_button.onClick.AddListener(() => { Application.OpenURL(mod_declare.FolderPath); });
 
             if (mod_state == ModState.LOADED)
             {
-                icon.GetComponent<Button>().onClick.AddListener(C<UnityAction>(() =>
+                icon.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     float current_time = Time.time;
                     if (current_time - Instance.lastClickTime > 1)
@@ -338,7 +338,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
                     {
                         StartCoroutine(WaitOpenWindow());
                     }
-                }));
+                });
             }
 
             void RefreshToggleState()
@@ -390,7 +390,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
                 // It can be sure that if mod is IConfigurable, then mod is loaded actually.
                 ModConfigureWindow.ShowWindow(configurable?.GetConfig());
             });
-            website_button.onClick.AddListener(C<UnityAction>(() => { Application.OpenURL(mod.GetUrl()); }));
+            website_button.onClick.AddListener(() => { Application.OpenURL(mod.GetUrl()); });
 
             if (!Config.isEditor)
             {
@@ -407,13 +407,13 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
             var reload_button = transform.Find("Reload").GetComponent<Button>();
             reload_button.gameObject.SetActive(true);
             reload_button.onClick.RemoveAllListeners();
-            reload_button.onClick.AddListener(C<UnityAction>(() =>
+            reload_button.onClick.AddListener(() =>
             {
                 if (!ModReloadService.ReloadMod(mod_declare))
                 {
                     LogService.LogWarning($"Failed to reload mod {mod_declare.Name}.");
                 }
-            }));
+            });
         }
     }
 }

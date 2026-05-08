@@ -15,20 +15,16 @@ public static class Converter
     {
         return DelegateSupport.ConvertDelegate<D>(func);
     }
-    public static System.ValueTuple<X, Y, Z> C<X, Y, Z>(ValueTuple<X, Y, Z> tuple)
+    public static System.ValueTuple<X, Y, Z> C<X, Y, Z>(this ValueTuple<X, Y, Z> tuple)
     {
-        if (!typeof(X).IsIL2CPPCompatible() || !typeof(Y).IsIL2CPPCompatible() || !typeof(Z).IsIL2CPPCompatible())
-        {
-            throw new ArgumentException("value tuple types are not compatible with IL2CPP");
-        }
         return new System.ValueTuple<X, Y, Z>(tuple.Item1, tuple.Item2, tuple.Item3);
     }
-    public static System.ValueTuple<X, Y> C<X, Y>(ValueTuple<X, Y> tuple)
+    public static IEnumerator C(this global::System.Collections.IEnumerator enumerator)
     {
-        if (!typeof(X).IsIL2CPPCompatible() || !typeof(Y).IsIL2CPPCompatible())
-        {
-            throw new ArgumentException("value tuple types are not compatible with IL2CPP");
-        }
+        return new IL2CPPEnumerator(enumerator).Cast<IEnumerator>();
+    }
+    public static System.ValueTuple<X, Y> C<X, Y>(this ValueTuple<X, Y> tuple)
+    {
         return new System.ValueTuple<X, Y>(tuple.Item1, tuple.Item2);
     }
     public static System.Type C (this Type type)
@@ -40,36 +36,6 @@ public static class Converter
     {
         return Type.GetType(type.AssemblyQualifiedName);
     }
-    public static System.Nullable<A> Nullify<A>(this A a) where A : new()
-    {
-        return new System.Nullable<A>(a);
-    }
-    #region  Arrays
-    public static A[] C<A>(this Il2CppArrayBase<A> arr)
-    {
-        return arr;
-    }
-    public static Il2CppReferenceArray<A> A<A>(params A[] arr) where A : Il2CppObjectBase
-    {
-        return arr;
-    }
-    public static Il2CppStringArray A(params string[] arr)
-    {
-        return arr;
-    }
-    public static T Cast<T>( Il2CppObjectBase obj) where T : Il2CppObjectBase
-    {
-        return obj.Cast<T>();
-    }
-    public static Il2CppReferenceArray<A> C<A>(this A[] arr) where A : Il2CppObjectBase
-    {
-        return arr;
-    }
-    public static Il2CppStringArray C(this string[] arr)
-    {
-        return arr;
-    }
-    #endregion
     public static MonoException C(this Exception e)
     {
         return new MonoException(e);
@@ -80,10 +46,6 @@ public static class Converter
     }
     public static System.Collections.Generic.HashSet<E> C<E>(this HashSet<E> set)
     {
-        if (!typeof(E).IsIL2CPPCompatible())
-        {
-            throw new ArgumentException(typeof(E) + " is not compatible with IL2CPP");
-        }
         System.Collections.Generic.HashSet<E> hash = new();
         foreach (var VARIABLE in set)
         {
@@ -102,10 +64,6 @@ public static class Converter
     }
     public static System.Collections.Generic.List<E> C<E>(this List<E> e)
     {
-        if (!typeof(E).IsIL2CPPCompatible())
-        {
-            throw new ArgumentException(typeof(E) + " is not compatible with IL2CPP");
-        }
         System.Collections.Generic.List<E> list = new System.Collections.Generic.List<E>();
         foreach (var item in e)
         {
@@ -124,10 +82,6 @@ public static class Converter
     }
     public static Dictionary<key, value> C<key, value>(this System.Collections.Generic.Dictionary<key, value> e)
     {
-        if (!typeof(key).IsIL2CPPCompatible() || !typeof(value).IsIL2CPPCompatible())
-        {
-            throw new ArgumentException("the dictionary types are not compatible with IL2CPP");
-        }
         Dictionary<key, value> dictionary = new Dictionary<key, value>();
         foreach (var item in e)
         {
@@ -143,26 +97,5 @@ public static class Converter
             dictionary.Add(item.Key, item.Value);
         }
         return dictionary;
-    }
-
-    public static System.Collections.Generic.List<T> L<T>(params T[] arr)
-    {
-        System.Collections.Generic.List<T> list = new();
-        foreach (var t in arr)
-        {
-            list.Add(t);
-        }
-
-        return list;
-    }
-    public static System.Collections.Generic.HashSet<T> H<T>(params T[] arr)
-    {
-        System.Collections.Generic.HashSet<T> list = new();
-        foreach (var t in arr)
-        {
-            list.Add(t);
-        }
-
-        return list;
     }
 }

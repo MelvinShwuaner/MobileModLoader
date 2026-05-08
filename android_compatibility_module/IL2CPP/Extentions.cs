@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -19,6 +20,10 @@ using Random = System.Random;
 namespace NeoModLoader.AndroidCompatibilityModule;
 public static class Extentions
 {
+	public static void doUnits(this WorldTile tile, Action<Actor> action)
+	{
+		tile.doUnits(action);
+	}
     public static bool IsValid(this Il2CppArrayBase arr)
     {
         return arr is { Length: > 0 };
@@ -35,6 +40,23 @@ public static class Extentions
         }
 
         return -1;
+    }
+
+    public static nint Clone(this GUIStyle orig)
+    {
+	    GUIStyle style = new GUIStyle(IL2CPP.il2cpp_object_new(Il2CppClassPointerStore<GUIStyle>.NativeClassPtr));
+	    style.m_Ptr = GUIStyle.Internal_Copy(orig, style);
+	    return style.Pointer;
+    }
+
+    public static void addGenome(this ActorAsset asset, params ValueTuple<string, float>[] pListGenomePartsIDs)
+    {
+	    Il2CppSystem.ValueTuple<string, float>[] arr = new Il2CppSystem.ValueTuple<string, float>[pListGenomePartsIDs.Length];
+	    for (var i = 0; i < pListGenomePartsIDs.Length; i++)
+	    {
+		    arr[i] = pListGenomePartsIDs[i].C();
+	    }
+	    asset.addGenome(arr);
     }
     public static IEnumerable<T> OfType<T>(this Il2CppObjectBase list) where T : Il2CppObjectBase
     {
@@ -58,79 +80,56 @@ public static class Extentions
     }
     #region Il2CppIEnumerable
     //extentions for ienumerables. since ienumerable isnt an interface in il2cpp we have to create extentions manually
-    public static Il2CppSystem.Collections.Generic.List<T>  ToList<T>(this Il2CppObjectBase Object) where T : Il2CppSystem.Object
+    public static Il2CppSystem.Collections.Generic.List<T> ToList<T>(this Il2CppObjectBase Object) where T : Il2CppSystem.Object
     {
-        var enumerable = Object.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-        if (enumerable == null)
-        {
-            throw new ArgumentException($"IL2CPP Object of {Object.GetType()} cannot be enumerated!");
-        }
+        var enumerable = Object.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
         return enumerable.ToList();
     }
     public static T FirstOrDefault<T>(this Il2CppObjectBase obj)
     {
-        var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-        if (enumerable == null)
-        {
-            throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-        }
+        var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
         return enumerable.FirstOrDefault();
     }
     public static T FirstOrDefault<T>(this Il2CppObjectBase obj, Func<T, bool> predicate)
     {
-        var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-        if (enumerable == null)
-        {
-            throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-        }
+        var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
         return enumerable.FirstOrDefault(Converter.C<Il2CppSystem.Func<T, bool>>(predicate));
     }
     public static Il2CppSystem.Collections.Generic.IEnumerable<T> Where<T>(this Il2CppObjectBase obj, Func<T, bool> func)
     {
-        var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-        if (enumerable == null)
-        {
-            throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-        }
+        var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
         return enumerable.Where(Converter.C<Il2CppSystem.Func<T, bool>>(func));
     }
     public static Il2CppSystem.Collections.Generic.IEnumerable<T> Take<T>(this Il2CppObjectBase obj, int num)
     {
-	    var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-	    if (enumerable == null)
-	    {
-		    throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-	    }
+	    var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
 	    return enumerable.Take(num);
     }
     public static Il2CppSystem.Linq.IOrderedEnumerable<T> OrderBy<T, K>(this Il2CppObjectBase obj, Func<T, K> func)
     {
-	    var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-	    if (enumerable == null)
-	    {
-		    throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-	    }
+	    var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
 	    return enumerable.OrderBy(Converter.C<Il2CppSystem.Func<T, K>>(func));
     }
     public static Il2CppSystem.Collections.Generic.IEnumerable<R> Select<T, R>(this Il2CppObjectBase obj, Func<T, R> func)
     {
-        var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-        if (enumerable == null)
-        {
-            throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-        }
+        var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
         return enumerable.Select(Converter.C<Il2CppSystem.Func<T, R>>(func));
     }
     public static bool Any<T>(this Il2CppObjectBase obj, Func<T, bool> func)
     {
-	    var enumerable = obj.TryCast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
-	    if (enumerable == null)
-	    {
-		    throw new ArgumentException($"IL2CPP Object of {obj.GetType()} cannot be enumerated!");
-	    }
+	    var enumerable = obj.Cast<Il2CppSystem.Collections.Generic.IEnumerable<T>>();
 	    return enumerable.Any(Converter.C<Il2CppSystem.Func<T, bool>>(func));
     }
     #endregion
+    public static void setHoverAction(this TipButton button, Action action)
+    {
+	    button.hoverAction = action;
+    }
+
+    public static void setToggleAction(this GodPower button, Action<string> action)
+    {
+	    button.toggle_action = action;
+    }
     //functions like listextention are useless to us now
     #region  Lists
     private static Random rnd => new();
@@ -294,21 +293,6 @@ public static class Extentions
 		return pList[num];
 	}
     #endregion
-    public static IEnumerator ToIL2CPP(this global::System.Collections.IEnumerator enumerator)
-    {
-        return new IL2CPPEnumerator(enumerator).Cast<IEnumerator>();
-    }
-    public static nint GetPointer<T>(this T obj) where T : Il2CppObjectBase
-    {
-        return obj.Pointer;
-    }
-    public static Il2CppObjectBase Cast(this Il2CppObjectBase obj, Type type)
-    {
-        var method = typeof(Il2CppObjectBase)
-            .GetMethod("Cast")
-            .MakeGenericMethod(type);
-        return (Il2CppObjectBase)method.Invoke(obj, null);
-    }
     public static Component GetComponent(this GameObject obj, Type type, int index)
     {
         var arr = obj.GetComponents(type.C());
@@ -370,11 +354,11 @@ public static class Extentions
         list.Remove(toremove);
         return list.ToArray();
     }
-    public static void AddListener(this UnityEvent action, Delegate func){
-        action.AddListener(Converter.C<UnityAction>(func));
+    public static void AddListener(this UnityEvent action, Action func){
+        action.AddListener(func);
     }
-    public static void AddListener<T>(this UnityEvent<T> action, Delegate func){
-        action.AddListener(Converter.C<UnityAction<T>>(func));
+    public static void AddListener<T>(this UnityEvent<T> action, Action<T> func){
+        action.AddListener(func);
     }
     public static bool CanAssignTo(this Type derived, Type baseType)
     {

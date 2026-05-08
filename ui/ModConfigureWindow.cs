@@ -409,7 +409,7 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
 
             TextInput text_input = text_area.transform.Find("Input").GetComponent<TextInput>();
 
-            text_input.Setup(pItem.TextVal, C<UnityAction<string>>((string pStringVal) =>
+            text_input.Setup(pItem.TextVal, (string pStringVal) =>
             {
                 if (!Instance._modifiedItems.ContainsKey(pItem))
                 {
@@ -417,7 +417,7 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
                 }
 
                 pItem.SetValue(pStringVal, true);
-            }));
+            });
             text_input.tip_button.textOnClick = pItem.Id;
             text_input.tip_button.text_description_2 = pItem.Id + " Description";
             text_area.transform.Find("Info/Text").GetComponent<Text>().text = LM.Get(pItem.Id);
@@ -439,16 +439,16 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
             slider_area.SetActive(true);
             TextInput value_input = slider_area.transform.Find("Control/Input").GetComponent<TextInput>();
             SliderBar slider_bar = slider_area.transform.Find("Control/Slider").GetComponent<SliderBar>();
-            slider_bar.Setup(pItem.FloatVal, pItem.MinFloatVal, pItem.MaxFloatVal, (UnityAction<float>)((float pFloatVal) =>
+            slider_bar.Setup(pItem.FloatVal, pItem.MinFloatVal, pItem.MaxFloatVal, (float pFloatVal) =>
             {
                 mark_modified(pItem);
                 pItem.SetValue(pFloatVal, true);
                 value_input.input.text = pItem.FloatVal.ToString("F2", CultureInfo.InvariantCulture);
-            }));
+            });
             slider_bar.tip_button.textOnClick = pItem.Id;
             slider_bar.tip_button.text_description_2 = pItem.Id + " Description";
 
-            value_input.Setup(pItem.FloatVal.ToString("F2", CultureInfo.InvariantCulture), C<UnityAction<string>>((string pTextVal) =>
+            value_input.Setup(pItem.FloatVal.ToString("F2", CultureInfo.InvariantCulture), (string pTextVal) =>
             {
                 if (!TryParseFloat(pTextVal, out float parsed))
                 {
@@ -460,7 +460,7 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
                 pItem.SetValue(parsed, true);
                 slider_bar.slider.value = pItem.FloatVal;
                 value_input.input.text = pItem.FloatVal.ToString("F2", CultureInfo.InvariantCulture);
-            }));
+            });
 
             slider_area.transform.Find("Info/Text").GetComponent<Text>().text = LM.Get(pItem.Id);
             if (string.IsNullOrEmpty(pItem.IconPath))
@@ -480,16 +480,16 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
             slider_area.SetActive(true);
             TextInput value_input = slider_area.transform.Find("Control/Input").GetComponent<TextInput>();
             SliderBar slider_bar = slider_area.transform.Find("Control/Slider").GetComponent<SliderBar>();
-            slider_bar.Setup(pItem.IntVal, pItem.MinIntVal, pItem.MaxIntVal, C<UnityAction<float>>((float pIntVal) =>
+            slider_bar.Setup(pItem.IntVal, pItem.MinIntVal, pItem.MaxIntVal,(float pIntVal) =>
             {
                 mark_modified(pItem);
                 pItem.SetValue(pIntVal, true);
                 value_input.input.text = pItem.IntVal.ToString(CultureInfo.InvariantCulture);
-            }), whole_numbers: true);
+            }, whole_numbers: true);
             slider_bar.tip_button.textOnClick = pItem.Id;
             slider_bar.tip_button.text_description_2 = pItem.Id + " Description";
 
-            value_input.Setup(pItem.IntVal.ToString(CultureInfo.InvariantCulture), C<UnityAction<string>>((string pTextVal) =>
+            value_input.Setup(pItem.IntVal.ToString(CultureInfo.InvariantCulture), (string pTextVal) =>
             {
                 if (!TryParseInt(pTextVal, out int parsed))
                 {
@@ -501,7 +501,7 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
                 pItem.SetValue(parsed, true);
                 slider_bar.slider.value = pItem.IntVal;
                 value_input.input.text = pItem.IntVal.ToString(CultureInfo.InvariantCulture);
-            }));
+            });
 
             slider_area.transform.Find("Info/Text").GetComponent<Text>().text = LM.Get(pItem.Id);
             if (string.IsNullOrEmpty(pItem.IconPath))
@@ -575,12 +575,12 @@ public class ModConfigureWindow : AbstractWindow<ModConfigureWindow>
                 SimpleButton option_button = Instantiate(SimpleButton.Prefab, options_root);
                 option_button.transform.localScale = Vector3.one;
                 option_button.name = $"Option_{option_index}";
-                option_button.Setup(C<UnityAction>(() =>
+                option_button.Setup(() =>
                     {
                         mark_modified(pItem);
                         pItem.SetValue(option_index, true);
                         refresh_select_buttons(options_root, pItem.IntVal);
-                    }),
+                    },
                     null, option_text, new Vector2(54, 20));
                 option_button.TipButton.enabled = false;
             }

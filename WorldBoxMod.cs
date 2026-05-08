@@ -11,7 +11,6 @@ using NeoModLoader.ncms_compatible_layer;
 using NeoModLoader.services;
 using NeoModLoader.ui;
 using NeoModLoader.utils;
-using NeoModLoader.utils.Sounds;
 using UnityEngine;
 using Il2CppInterop.Runtime.Injection;
 namespace NeoModLoader;
@@ -119,7 +118,7 @@ public class WorldBoxMod : MonoBehaviour
         Harmony.CreateAndPatchAll(typeof(ResourcesPatch), Others.harmony_id);
 
         if (!SmoothLoader.isLoading()) SmoothLoader.prepare();
-        SmoothLoader.add(C<MapLoaderAction>(() =>
+        SmoothLoaderHelper.add(() =>
         {
             ResourcesPatch.Initialize();
             LoadLocales();
@@ -130,10 +129,10 @@ public class WorldBoxMod : MonoBehaviour
             NCMSCompatibleLayer.PreInit();
             ModInfoUtils.InitializeModCompileCache();
             AndroidHelper.Init();
-        }), "Initialize NeoModLoader");
+        }, "Initialize NeoModLoader");
         ModEnablePlan startup_enable_plan = null;
         List<ModDependencyNode> mod_nodes = new();
-        SmoothLoader.add(C<MapLoaderAction>(() =>
+        SmoothLoaderHelper.add(() =>
         {
             ModCompileLoadService.loadInfoOfBepInExPlugins();
 
@@ -143,13 +142,13 @@ public class WorldBoxMod : MonoBehaviour
             mod_nodes.AddRange(startup_enable_plan.LoadOrder);
 
             ModCompileLoadService.prepareCompile(mod_nodes);
-        }), "Load Mods Info And Prepare Mods");
-        SmoothLoader.add(C<MapLoaderAction>(() =>
+        }, "Load Mods Info And Prepare Mods");
+        SmoothLoaderHelper.add(() =>
         {
             var mods_to_load = new List<ModDeclare>();
             foreach (var mod in mod_nodes)
             {
-                SmoothLoader.add(C<MapLoaderAction>(() =>
+                SmoothLoaderHelper.add(() =>
                 {
                     if (ModCompileLoadService.compileMod(mod))
                     {
@@ -159,12 +158,12 @@ public class WorldBoxMod : MonoBehaviour
                     {
                         LogService.LogError($"Failed to compile mod {mod.mod_decl.Name}");
                     }
-                }), "Compile Mod " + mod.mod_decl.Name);
+                }, "Compile Mod " + mod.mod_decl.Name);
             }
             AssetLinker Linker = new();
             foreach (var mod in mod_nodes)
             {
-                SmoothLoader.add(C<MapLoaderAction>(() =>
+                SmoothLoaderHelper.add(() =>
                 {
                     if (mods_to_load.Contains(mod.mod_decl))
                     {
@@ -175,10 +174,10 @@ public class WorldBoxMod : MonoBehaviour
                         ResourcesPatch.LoadAssetBundlesFromFolder(Path.Combine(mod.mod_decl.FolderPath,
                             Paths.ModAssetBundleFolderName));
                     }
-                }), "Load Resources From Mod " + mod.mod_decl.Name);
+                }, "Load Resources From Mod " + mod.mod_decl.Name);
             }
 
-            SmoothLoader.add(C<MapLoaderAction>(() =>
+            SmoothLoaderHelper.add(() =>
             {
                 ModCompileLoadService.loadMods(mods_to_load);
                 Linker.AddAssets();
@@ -198,24 +197,24 @@ public class WorldBoxMod : MonoBehaviour
                 var successfulInit = new Dictionary<IMod, bool>();
                 foreach (IMod mod in LoadedMods.Where(mod => mod is IStagedLoad))
                 {
-                    SmoothLoader.add(C<MapLoaderAction>(() =>
+                    SmoothLoaderHelper.add(() =>
                     {
                         successfulInit.Add(mod, ModCompileLoadService.TryInitMod(mod));
-                    }), "Init Mod " + mod.GetDeclaration().Name);
+                    }, "Init Mod " + mod.GetDeclaration().Name);
                 }
                 foreach (IMod mod in LoadedMods.Where(mod => mod is IStagedLoad))
                 {
-                    SmoothLoader.add(C<MapLoaderAction>(() =>
+                    SmoothLoaderHelper.add(() =>
                     {
                         if (successfulInit.ContainsKey(mod) && successfulInit[mod])
                         {
                             ModCompileLoadService.PostInitMod(mod);
                         }
-                    }), "Post-Init Mod " + mod.GetDeclaration().Name);
+                    }, "Post-Init Mod " + mod.GetDeclaration().Name);
                 }
-            }), "Load Mods");
+            }, "Load Mods");
 
-            SmoothLoader.add(C<MapLoaderAction>(() =>
+            SmoothLoaderHelper.add(() =>
             {
                 ModWorkshopService.Init();
                 UIManager.init();
@@ -224,9 +223,9 @@ public class WorldBoxMod : MonoBehaviour
 
                 LM.ApplyLocale();
                 initialized_successfully = true;
-            }), "NeoModLoader Post Initialize");
-            SmoothLoader.add(C<MapLoaderAction>(ExternalModInstallService.CheckExternalModInstall), "Check External Mods to Install");
-        }), "Compile Mods And Load resources");
+            }, "NeoModLoader Post Initialize");
+            SmoothLoaderHelper.add(ExternalModInstallService.CheckExternalModInstall, "Check External Mods to Install");
+        }, "Compile Mods And Load resources");
     }
     
     private void LoadLocales()
