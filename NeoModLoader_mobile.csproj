@@ -228,6 +228,8 @@
       <Compile Remove="android_compatibility_module\Stubs\**" />
       <Compile Remove="android_compatibility_module\Mono\**" />
       <Compile Remove="services\WorkShop\**" />
+      <Compile Remove="services\ModWorkshopServiceUnix.cs" />
+      <Compile Remove="services\ModWorkshopServiceWindows.cs" />
     </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

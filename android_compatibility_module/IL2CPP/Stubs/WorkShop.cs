@@ -20,28 +20,28 @@ namespace NeoModLoader.services
     {
         public void UploadModLoader(string changelog)
         {
-            throw new NotSupportedException("workshop is not supported on mobile");
+            throw new PlatformNotSupportedException("workshop is not supported on mobile");
         }
 
         public Promise UploadMod(string name, string description, string previewImagePath, string workshopPath, string changelog,
             bool verified)
         {
-            throw new NotSupportedException("workshop is not supported on mobile");
+            throw new PlatformNotSupportedException("workshop is not supported on mobile");
         }
 
         public Promise EditMod(ulong fileID, string previewImagePath, string workshopPath, string changelog)
         {
-            throw new NotSupportedException("workshop is not supported on mobile");
+            throw new PlatformNotSupportedException("workshop is not supported on mobile");
         }
 
         public void FindSubscribedMods()
         {
-            throw new NotSupportedException("workshop is not supported on mobile");
+            throw new PlatformNotSupportedException("workshop is not supported on mobile");
         }
 
         public ModDeclare GetNextModFromWorkshopItem()
         {
-            throw new NotSupportedException("workshop is not supported on mobile");
+            throw new PlatformNotSupportedException("workshop is not supported on mobile");
         }
     }
 }

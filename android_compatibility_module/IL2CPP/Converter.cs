@@ -1,8 +1,3 @@
-using System.Collections.Concurrent;
-using System.Reflection;
-using HarmonyLib;
-using Il2CppSystem.Linq;
-
 namespace NeoModLoader.AndroidCompatibilityModule;
 using Il2CppSystem.Collections;
 using Il2CppInterop.Runtime.InteropTypes;
@@ -75,9 +70,9 @@ public static class Converter
         return arr;
     }
     #endregion
-    public static System.Exception C(this Exception e)
+    public static MonoException C(this Exception e)
     {
-        return new System.Exception(e.ToString());
+        return new MonoException(e);
     }
     public static Il2CppException C(this System.Exception e)
     {
