@@ -119,7 +119,6 @@ public static class PowerButtonCreator
     /// <summary>
     ///  for compatibility with il2cpp
     /// </summary>
-    /// <remarks>do NOT use delegates without the same parameters/return of <see cref="UnityAction"/></remarks>
     public static PowerButton CreateSimpleButton(string pId, Action pAction,
         Sprite pIcon, Transform pParent = null, Vector2 pLocalPosition = default)
     {

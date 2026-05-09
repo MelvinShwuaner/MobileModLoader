@@ -183,6 +183,16 @@ namespace NeoModLoader.AndroidCompatibilityModule
 				WrapperResolver.ResolveInstantiate(comp.gameObject, clone.Cast<Component>().gameObject);
 			}
 		}
+		static WrappedAction CreateWrappedAction(MethodInfo method)
+		{
+			var param = Expression.Parameter(typeof(WrappedBehaviour), "instance");
+
+			var call = Expression.Call(
+				Expression.Convert(param, method.DeclaringType),
+				method
+			);
+			return Expression.Lambda<WrappedAction>(call, param).Compile();
+		}
 		public static WrappedAction GetWrappedMethod(Type type, string Method)
 		{
 			while (type != null)
@@ -194,7 +204,7 @@ namespace NeoModLoader.AndroidCompatibilityModule
 					BindingFlags.NonPublic |
 					BindingFlags.DeclaredOnly, Type.EmptyTypes);
 				if (method != null)
-					return method.AsDelegate<WrappedAction>();
+					return CreateWrappedAction(method);
 				type = type.BaseType;
 			}
 			return null;

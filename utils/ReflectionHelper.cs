@@ -13,14 +13,14 @@ internal static class ReflectionHelper
 
     internal static Delegate GetMethod<T>(string method_name, bool is_static = false)
     {
-        return AsDelegate<Delegate>(is_static
+        return createMethodDelegate(is_static
             ? typeof(T).GetMethod(method_name, BindingFlags.Static | BindingFlags.NonPublic)
             : AccessTools.Method(typeof(T), method_name));
     }
 
     internal static Delegate GetMethod(Type type, string method_name, bool is_static = false)
     {
-        return AsDelegate<Delegate>(is_static
+        return createMethodDelegate(is_static
             ? type.GetMethod(method_name, BindingFlags.Static | BindingFlags.NonPublic)
             : AccessTools.Method(type, method_name));
     }
@@ -136,7 +136,7 @@ internal static class ReflectionHelper
             instance, parameter).Compile();
     }
 
-    internal static D AsDelegate<D>(this MethodInfo method_info) where D : Delegate
+    internal static Delegate createMethodDelegate(this MethodInfo method_info)
     {
         List<ParameterExpression> paramExpressions = method_info.GetParameters()
             .Select((p, i) => Expression.Parameter(p.ParameterType, p.Name)).ToList();
@@ -152,7 +152,7 @@ internal static class ReflectionHelper
             callExpression = Expression.Call(instanceExpression, method_info, paramExpressions);
             paramExpressions.Insert(0, instanceExpression);
         }
-        var lambdaExpression = Expression.Lambda<D>(callExpression, paramExpressions);
+        var lambdaExpression = Expression.Lambda(callExpression, paramExpressions);
         return lambdaExpression.Compile();
     }
 }
