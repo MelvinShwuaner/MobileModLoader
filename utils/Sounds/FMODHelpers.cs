@@ -1,6 +1,7 @@
 using FMOD;
 using FMODUnity;
 using HarmonyLib;
+using NeoModLoader.constants;
 using UnityEngine;
 
 namespace NeoModLoader.utils.Sounds;
@@ -51,6 +52,7 @@ internal static class FMODPatches
     [HarmonyPatch(typeof(RuntimeManager), "Update")]
     static void Update()
     {
+        
         SFXGroup.setVolume(GetVolume(SoundType.Sound));
         MusicGroup.setVolume(GetVolume(SoundType.Music));
         UIGroup.setVolume(GetVolume(SoundType.UI));
@@ -69,6 +71,7 @@ public static class FMODHelper
 
     internal static void InitFMOD()
     {
+        Harmony.CreateAndPatchAll(typeof(FMODPatches), Others.harmony_id);
         ThrowIfNotOk("Failed to initialize FMOD Core System!", RuntimeManager.StudioSystem.getCoreSystem(out var coresystem));
         FMODSystem = coresystem;
         ThrowIfNotOk("Failed to create SFXGroup", FMODSystem.createChannelGroup("SFXGroup", out var Group));
