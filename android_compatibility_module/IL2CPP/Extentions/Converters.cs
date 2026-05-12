@@ -1,6 +1,8 @@
 using Il2CppSystem.Collections;
 using Sys = Il2CppSystem;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using NeoModLoader.AndroidCompatibilityModule;
 /// <summary>
 /// collection of tools to allow mods to work on il2cpp and mono on the same code
@@ -80,6 +82,10 @@ public static partial class Extentions
             list.Add(item);
         }
         return list;
+    }
+    public static Il2CppReferenceArray<A> C<A>(this A[] arr) where A : Il2CppObjectBase
+    {
+        return arr;
     }
     public static Dictionary<key, value> C<key, value>(this Sys.Collections.Generic.Dictionary<key, value> e)
     {

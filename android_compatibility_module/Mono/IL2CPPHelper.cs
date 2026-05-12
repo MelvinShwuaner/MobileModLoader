@@ -22,10 +22,6 @@ public static class IL2CPPHelper
     {
         return a;
     }
-    public static A? N<A>(this A a) where A : struct
-    {
-        return a;
-    }
     public static System.Collections.Generic.List<T> L<T>(params T[] arr)
     {
         System.Collections.Generic.List<T> list = new();
@@ -45,9 +41,5 @@ public static class IL2CPPHelper
         }
 
         return list;
-    }
-    public static T Cast<T>(this object obj)
-    {
-        return (T)obj;
     }
 }

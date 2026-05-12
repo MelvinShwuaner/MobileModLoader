@@ -24,9 +24,17 @@ public static class Extentions
     {
         return manager._hashset;
     }
+    public static A? N<A>(this A a) where A : struct
+    {
+        return a;
+    }
     public static void AddListener(this UnityEvent ev, Action action)
     {
         ev.AddListener(() => action());
+    }
+    public static T Cast<T>(this object obj)
+    {
+        return (T)obj;
     }
     public static void AddListener<T>(this UnityEvent<T> ev, Action<T> action)
     {

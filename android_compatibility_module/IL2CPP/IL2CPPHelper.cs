@@ -43,35 +43,18 @@ public static class IL2CPPHelper
         textAsset.name = name;
         return textAsset;
     }
-    public static Il2CppStringArray A(params string[] arr)
+    public static D C<D>(Delegate func) where D : Il2CppSystem.Delegate
     {
-        return arr;
-    }
-    public static A[] C<A>(this Il2CppArrayBase<A> arr)
-    {
-        return arr;
+        return DelegateSupport.ConvertDelegate<D>(func);
     }
     public static Il2CppReferenceArray<A> A<A>(params A[] arr) where A : Il2CppObjectBase
     {
         return arr;
     }
-    public static Il2CppReferenceArray<A> C<A>(this A[] arr) where A : Il2CppObjectBase
+    public static Il2CppStringArray A(params string[] arr)
     {
         return arr;
     }
-    public static Il2CppStringArray C(this string[] arr)
-    {
-        return arr;
-    }
-    public static D C<D>(Delegate func) where D : Il2CppSystem.Delegate
-    {
-        return DelegateSupport.ConvertDelegate<D>(func);
-    }
-    public static Sys.Nullable<A> N<A>(this A a) where A : new()
-    {
-        return new Sys.Nullable<A>(a);
-    }
-    
     public static Sys.Collections.Generic.List<T> L<T>(params T[] arr)
     {
         Sys.Collections.Generic.List<T> list = new();
