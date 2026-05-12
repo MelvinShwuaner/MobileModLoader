@@ -1,7 +1,7 @@
 using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppSystem.Linq;
 using IEnumerable = Il2CppSystem.Collections.IEnumerable;
-namespace NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.AndroidCompatibilityModule;
 
 public static partial class Extentions
 {

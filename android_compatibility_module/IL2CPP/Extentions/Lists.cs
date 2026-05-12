@@ -1,7 +1,7 @@
 using UnityEngine;
 using Random = System.Random;
 
-namespace NeoModLoader.AndroidCompatibilityModule;
+using  NeoModLoader.AndroidCompatibilityModule;
 
 public static partial class Extentions
 {

@@ -1,6 +1,6 @@
 using RSG;
 
-namespace NeoModLoader.AndroidCompatibilityModule;
+using  NeoModLoader.AndroidCompatibilityModule;
 
 public static partial class Extentions
 {

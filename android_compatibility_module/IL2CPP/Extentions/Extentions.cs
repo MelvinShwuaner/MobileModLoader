@@ -6,8 +6,7 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using NeoModLoader.services;
 using UnityEngine;
 using UnityEngine.Events;
-
-namespace NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.AndroidCompatibilityModule;
 public static partial class Extentions
 {
 	public static void doUnits(this WorldTile tile, Action<Actor> action)
