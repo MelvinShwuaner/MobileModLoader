@@ -10,7 +10,7 @@ public static class DebugService
 {
     static DebugService()
     {
-        Logger = new Debugger<object[]>(AccessTools.Method(typeof(Hooks), nameof(Hooks.loghook)));
+        Logger = new LogDebugger(AccessTools.Method(typeof(Hooks), nameof(Hooks.loghook)));
         ExceptionHandler = new Debugger<Exception>(null, null, AccessTools.Method(typeof(Hooks), nameof(Hooks.finalizer)));
         Profiler = new Debugger<long>(AccessTools.Method(typeof(Hooks), nameof(Hooks.prefix)), AccessTools.Method(typeof(Hooks), nameof(Hooks.postfix)));
     }
@@ -19,6 +19,10 @@ public static class DebugService
         public static void loghook(MethodBase __originalMethod, object[] __args)
         {
             Logger.Handler(__originalMethod, __args);
+        }
+        public static void loghook2(MethodBase __originalMethod)
+        {
+            Logger.Handler(__originalMethod, null);
         }
         public static void prefix(out long __state)
         {
@@ -44,6 +48,32 @@ public static class DebugService
         }
         return true;
     }
+
+    public class LogDebugger : Debugger<object[]>
+    {
+        public LogDebugger(MethodInfo method) : base(method){}
+        private static HarmonyMethod Prefix2 =
+            new HarmonyMethod(AccessTools.Method(typeof(Hooks), nameof(Hooks.loghook2)));
+        public override void Attach(MethodBase method)
+        {
+            try
+            {
+                Patcher.Patch(method, Prefix);
+            }
+            catch (Exception e)
+            {
+                LogService.LogError($"Failed to attach main logger to {method.FullDescription()}. using backup logger");
+                try
+                {
+                    Patcher.Patch(method, Prefix2);
+                }
+                catch (Exception ee)
+                {
+                    LogService.LogError($"Failed to attach backup logger to {method.FullDescription()} due to {ee}");
+                }
+            }
+        }
+    }
     public class Debugger<T>
     {
         public void AddHandler(Action<MethodBase, T>  handler)
@@ -66,9 +96,9 @@ public static class DebugService
                 this.Finalizer = new HarmonyMethod(Finalizer);
             }
         }
-        HarmonyMethod Prefix;
-        HarmonyMethod Postfix;
-        HarmonyMethod Finalizer;
+        protected HarmonyMethod Prefix;
+        protected HarmonyMethod Postfix;
+        protected HarmonyMethod Finalizer;
         public void Attach(Assembly assembly, Func<MethodBase, bool> predicate = null)
         {
             foreach (var Type in AccessTools.GetTypesFromAssembly(assembly))
@@ -98,7 +128,7 @@ public static class DebugService
                 Attach(method);
             }
         }
-        public void Attach(MethodBase method)
+        public virtual void Attach(MethodBase method)
         {
             try
             {
@@ -111,7 +141,7 @@ public static class DebugService
         }
     }
     static readonly Harmony Patcher = new (Others.harmony_id);
-    public static readonly Debugger<object[]> Logger;
+    public static readonly LogDebugger Logger;
     public static readonly Debugger<Exception> ExceptionHandler;
     public static readonly Debugger<long> Profiler;
     public static readonly Func<MethodBase, bool> DefaultPredicate = method => !method.IsDefined(typeof(DoNotDebug), true) && !method.DeclaringType!.IsDefined(typeof(DoNotDebug), true);
@@ -119,9 +149,7 @@ public static class DebugService
 public class HarmonyPatcher //any harmony patches causing you trouble? this lets you single them out!
 {
     private static readonly FieldInfo containerAttributes = AccessTools.Field(typeof(PatchClassProcessor), "containerAttributes");
-    public Dictionary<Type, PatchClassProcessor> Processors = new();
-    
-
+    Dictionary<Type, PatchClassProcessor> Processors = new();
     private Harmony harmony;
     public HarmonyPatcher(string ID)
     {
@@ -158,6 +186,7 @@ public class HarmonyPatcher //any harmony patches causing you trouble? this lets
         }
         Processors.Clear();
     }
+    public IEnumerable<Type> Types => Processors.Keys;
     public bool PatchRandom(out Type type)
     {
         type = null;

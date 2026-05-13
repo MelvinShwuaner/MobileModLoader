@@ -120,6 +120,10 @@ public class WrappedMethodCollection
     private static Dictionary<Type, WrappedMethodCollection> collections = new();
     public static WrappedMethodCollection Get(Type type)
     {
+        if (!type.IsAssignableTo(typeof(WrappedBehaviour)))
+        {
+            throw new ArgumentException("type is not a WrappedBehaviour", nameof(type));
+        }
         if (collections.TryGetValue(type, out var value))
         {
             return value;

@@ -15,7 +15,7 @@ public class Vector
     }
     public static implicit operator Vector3(Vector v)
     {
-        return new  UnityEngine.Vector3(v.x, v.y, v.z);
+        return new Vector3(v.x, v.y, v.z);
     }
     public static implicit operator Vector(Vector3 v)
     {
