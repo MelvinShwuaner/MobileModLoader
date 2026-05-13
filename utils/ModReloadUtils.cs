@@ -801,7 +801,6 @@ internal static class ModReloadUtils
                             methodReference,
                             declaring_runtime_type.GetConstructors(BindingFlags.Instance | BindingFlags.Static |
                                                                    BindingFlags.Public | BindingFlags.NonPublic)
-                                .Cast<MethodBase>()
                         );
                     }
 
@@ -810,7 +809,6 @@ internal static class ModReloadUtils
                         declaring_runtime_type.GetMethods(BindingFlags.Instance | BindingFlags.Static |
                                                           BindingFlags.Public | BindingFlags.NonPublic)
                             .Select(method => CloseRuntimeGenericMethod(methodReference, method, generic_context))
-                            .Cast<MethodBase>()
                     );
                 }
                 catch (Exception)
