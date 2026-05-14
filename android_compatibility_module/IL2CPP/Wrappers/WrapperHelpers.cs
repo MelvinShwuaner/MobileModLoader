@@ -1,12 +1,16 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
-
+using Il2CppSystem.Diagnostics;
 using NeoModLoader.constants;
 using NeoModLoader.AndroidCompatibilityModule;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using StackFrame = System.Diagnostics.StackFrame;
+using StackTrace = System.Diagnostics.StackTrace;
+
 public class ObjectPoolGenericMono<T> where T : WrappedBehaviour
 {
     private readonly List<T> _elements_total = new List<T>();
@@ -183,7 +187,7 @@ namespace NeoModLoader.AndroidCompatibilityModule
 				WrapperResolver.ResolveInstantiate(comp.gameObject, clone.Cast<Component>().gameObject);
 			}
 		}
-		static WrappedAction CreateWrappedAction(MethodInfo method)
+		public static WrappedAction CreateWrappedAction(MethodInfo method)
 		{
 			var param = Expression.Parameter(typeof(WrappedBehaviour), "instance");
 			var call = Expression.Call(
@@ -229,7 +233,15 @@ namespace NeoModLoader.AndroidCompatibilityModule
 			}
 			return null;
 		}
-
+		/// <summary>
+		/// returns the type that called the method, which calls this method
+		/// </summary>
+		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public static Type GetCallingType()
+		{
+			return new StackFrame(2).GetMethod()!.DeclaringType;
+		}
 		public static int GetIndex(Component beh, GameObject obj)
 		{
 			var arr = obj.GetComponents(beh.GetType().C());
@@ -264,7 +276,6 @@ namespace NeoModLoader.AndroidCompatibilityModule
 		{
 			using var resolver = new WrapperResolver(orig, clone, out bool shouldResolve);
 			if (shouldResolve) resolver.Resolve();
-			resolver.Dispose();
 		}
 
 		public WrapperResolver(GameObject orig, GameObject clone, out bool shouldResolve)
@@ -292,7 +303,6 @@ namespace NeoModLoader.AndroidCompatibilityModule
 			{
 				var origBehaviours = origTransform.GetComponents<Il2CPPBehaviour>();
 				if (!origBehaviours.IsValid()) continue;
-
 				var clonedBehaviours = cloneTransform.GetComponents<Il2CPPBehaviour>();
 				for (int j = 0; j < origBehaviours.Length; j++)
 					Clone(origBehaviours[j], clonedBehaviours[j]);
@@ -307,7 +317,7 @@ namespace NeoModLoader.AndroidCompatibilityModule
 			Type wrappedType = orig.WrappedType;
 			WrappedBehaviour cloned = clone.CreateWrapperIfNull(wrappedType);
 
-			foreach (var field in GetCachedFields(wrappedType))
+			foreach (var field in GetFields(wrappedType))
 			{
 				var fieldObj = field.GetValue(beh);
 				if (fieldObj == null) continue;
@@ -342,7 +352,7 @@ namespace NeoModLoader.AndroidCompatibilityModule
 			}
 		}
 
-		private static FieldInfo[] GetCachedFields(Type type)
+		private static FieldInfo[] GetFields(Type type)
 		{
 			if (!fieldCache.TryGetValue(type, out var fields))
 			{
@@ -362,6 +372,145 @@ namespace NeoModLoader.AndroidCompatibilityModule
 		public void Dispose()
 		{
 			origToClone = null;
+		}
+	}
+	class WrappedMethodHandler
+	{
+		public class Invokation
+		{
+			public float Time;
+			public readonly float Rate;
+			public float Clock;
+
+			public Invokation(float time, float rate)
+			{
+				Time = time;
+				Rate = rate;
+				Clock = rate;
+			}
+		}
+		class MethodStore
+		{
+			public List<Coroutine> Coroutines = new();
+			public Invokation Invokation;
+			public WrappedAction Method;
+		}
+		class TypeStore(Type type)
+		{
+			Dictionary<string, MethodStore> Stores = new();
+
+			public void AddCoroutine(string method, Coroutine coroutine)
+			{
+				Get(method).Coroutines.Add(coroutine);
+			}
+
+			public Coroutine GetCoroutine(string method)
+			{
+				if (Stores.TryGetValue(method, out var store))
+				{
+					while (store.Coroutines.Count > 0)
+					{
+						var coroutine = store.Coroutines.Pop();
+						if (coroutine.WasCollected || coroutine.m_Ptr == 0)
+						{
+							continue;
+						}
+
+						return coroutine;
+					}
+				}
+
+				return null;
+			}
+
+			public void CheckInvokations(float elapsed, WrappedBehaviour instance)
+			{
+				foreach (var method in Stores.Values)
+				{
+					var invokation = method.Invokation;
+					if (invokation.Time > 0)
+					{
+						invokation.Time -= elapsed;
+						continue;
+					}
+					if (invokation.Rate <= 0)
+					{
+						method.Method(instance);
+						method.Invokation = null;
+						continue;
+					}
+					invokation.Clock -= elapsed;
+					if (!(invokation.Clock <= 0)) continue;
+					invokation.Clock = invokation.Rate;
+					method.Method(instance);
+				}
+			}
+
+			public void SetInvokation(string method, Invokation invokation)
+			{
+				var store = Get(method);
+				store.Invokation = invokation;
+				store.Method ??= CreateWrappedAction(type.GetMethod(method));
+			}
+
+			public MethodStore Get(string method)
+			{
+				if (!Stores.TryGetValue(method, out var store))
+				{
+					store = new MethodStore();
+					Stores[method] = store;
+				}
+
+				return store;
+			}
+			public void StopInvokation(string method)
+			{
+				var store = Get(method);
+				store.Invokation = null;
+			}
+		}
+
+		Dictionary<Type, TypeStore> Stores = new();
+
+		public void AddCoroutine(Type type, string method, Coroutine coroutine)
+		{
+			Get(type).AddCoroutine(method, coroutine);
+		}
+
+		public Coroutine GetCoroutine(Type type, string method)
+		{
+			if (Stores.TryGetValue(type, out var store))
+			{
+				return store.GetCoroutine(method);
+			}
+			return null;
+		}
+
+		public void CheckInvokations(float elapsed, WrappedBehaviour instance)
+		{
+			foreach (var store in Stores.Values)
+			{
+				store.CheckInvokations(elapsed, instance);
+			}
+		}
+		public void SetInvokation(Type type, string method, Invokation invokation)
+		{
+			Get(type).SetInvokation(method, invokation);
+		}
+
+		public void StopInvokation(Type type, string method)
+		{
+			Get(type).StopInvokation(method);
+		}
+
+		TypeStore Get(Type type)
+		{
+			if (!Stores.TryGetValue(type, out var store))
+			{
+				store = new TypeStore(type);
+				Stores[type] = store;
+			}
+			return store;
 		}
 	}
 }

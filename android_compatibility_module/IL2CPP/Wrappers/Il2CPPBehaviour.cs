@@ -48,6 +48,11 @@ public sealed class Il2CPPBehaviour : MonoBehaviour
 
     public void Update()
     {
+        if (WrappedBehaviour == null)
+        {
+            return;
+        }
+        WrappedBehaviour.HandleInvokations(Time.deltaTime);
         update?.Invoke(WrappedBehaviour);
     }
 

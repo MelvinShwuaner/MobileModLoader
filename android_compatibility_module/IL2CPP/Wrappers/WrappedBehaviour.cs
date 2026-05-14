@@ -1,11 +1,11 @@
 using System.Collections;
+using System.Reflection;
 using Il2CppInterop.Runtime;
 using Newtonsoft.Json;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace NeoModLoader.AndroidCompatibilityModule;
-
 public class WrappedBehaviour
 {
     [JsonIgnore]
@@ -89,6 +89,43 @@ public class WrappedBehaviour
     public void StopAllCoroutines(){
         Wrapper.StopAllCoroutines();
     }
+    protected Coroutine StartCoroutine(string method, object param = null)
+    {
+        Type type = WrapperHelper.GetCallingType();
+        IEnumerator enumerator = (IEnumerator)type.GetMethod(method)!.Invoke(this, param == null ? null : [param]);
+        Coroutine coroutine =  StartCoroutine(enumerator);
+        Handler.AddCoroutine(type, method, coroutine);
+        return coroutine;
+    }
+    protected void StopCoroutine(string method)
+    {
+        Type type = WrapperHelper.GetCallingType();
+        Coroutine coroutine = Handler.GetCoroutine(type, method);
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+    }
+    private WrappedMethodHandler Handler = new();
+    public void InvokeRepeating(string name, float time, float repeatRate)
+    {
+        Type type = WrapperHelper.GetCallingType();
+        Handler.SetInvokation(type, name, new WrappedMethodHandler.Invokation(time, repeatRate));
+    }
+    public void Invoke(string name, float time)
+    {
+        Type type = WrapperHelper.GetCallingType();
+        Handler.SetInvokation(type, name, new WrappedMethodHandler.Invokation(time, -1));
+    }
+    internal void HandleInvokations(float elapsed)
+    {
+        Handler.CheckInvokations(elapsed, this);
+    }
+    public void CancelInvoke(string name)
+    {
+        Type type = WrapperHelper.GetCallingType();
+        Handler.StopInvokation(type, name);
+    }
     public static T Instantiate<T>(T obj, Transform parent = null, bool positionstays = false) where T : Object
     {
         return Object.Instantiate(obj, parent, positionstays);
@@ -148,20 +185,5 @@ public class WrappedMethodCollection
             Methods[Method] = method;
             return method;
         }
-    }
-}
-//generic version
-public static class WrappedMethodCollection<T> where T : WrappedBehaviour {
-    static Dictionary<string, WrappedAction> Methods = new();
-    private static Type Type = typeof(T);
-    public static WrappedAction Get(string Method)
-    {
-        if (Methods.TryGetValue(Method, out var wrappedMethod))
-        {
-            return wrappedMethod;
-        }
-        var method = WrapperHelper.GetWrappedMethod(Type, Method);
-        Methods[Method] = method;
-        return method;
     }
 }

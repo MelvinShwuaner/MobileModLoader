@@ -13,7 +13,7 @@ namespace NeoModLoader.General.UI.Tab;
 
 public static class TabManager
 {
-    private const int tab_count_each_line = 14;
+    private static int tab_count_each_line => Config.isMobile ? 6 : 14;
     private const float check_new_tabs_interval = 1;
     private const float shrink_coef = 0.79f;
     private const float default_tab_width = 43f;
@@ -146,6 +146,7 @@ public static class TabManager
 
     private static void _updateTabEntryRectAs(Button tab, int index)
     {
+        return;
         int row_nr = Math.Min(tab_count_each_line, tab_entries.Count);
         int pos_x = (index % row_nr) - row_nr / 2;
         int pos_y = index / row_nr;
