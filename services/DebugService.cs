@@ -189,7 +189,7 @@ public class HarmonyPatcher //any harmony patches causing you trouble? this lets
         {
             return false;
         }
-        type = types[^1];
+        type = types[types.Count - 1];
         Patch(type);
         return true;
     }
