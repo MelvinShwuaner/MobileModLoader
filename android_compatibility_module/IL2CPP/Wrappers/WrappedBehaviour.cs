@@ -6,7 +6,6 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace NeoModLoader.AndroidCompatibilityModule;
-using static WrapperHelper;
 public class WrappedBehaviour
 {
     [JsonIgnore]
@@ -77,7 +76,7 @@ public class WrappedBehaviour
     }
     public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays = true, bool stub = true) where T : WrappedBehaviour
     {
-        return Instantiate(original, parent, worldPositionStays);
+        return WrapperHelper.Instantiate(original, parent, worldPositionStays);
     }
     public Coroutine StartCoroutine(IEnumerator enumerator)
     {
@@ -92,7 +91,7 @@ public class WrappedBehaviour
     }
     protected Coroutine StartCoroutine(string method, object param = null)
     {
-        Type type = GetCallingType();
+        Type type = WrapperHelper.GetCallingType();
         IEnumerator enumerator = (IEnumerator)type.GetWrappedMethod(method, param?.GetType())!.Invoke(this, param == null ? null : [param]);
         Coroutine coroutine = StartCoroutine(enumerator);
         Handler.AddCoroutine(type, method, coroutine);
@@ -100,7 +99,8 @@ public class WrappedBehaviour
     }
     protected void StopCoroutine(string method)
     {
-        Coroutine coroutine = Handler.GetCoroutine(GetCallingType(), method);
+        Type type = WrapperHelper.GetCallingType();
+        Coroutine coroutine = Handler.GetCoroutine(type, method);
         if (coroutine != null)
         {
             Wrapper.StopCoroutine(coroutine);
@@ -108,15 +108,18 @@ public class WrappedBehaviour
     }
     protected void InvokeRepeating(string name, float time, float repeatRate)
     {
-        Handler.SetInvokation(GetCallingType(), name, new WrappedMethodHandler.Invokation(time, repeatRate));
+        Type type = WrapperHelper.GetCallingType();
+        Handler.SetInvokation(type, name, new WrappedMethodHandler.Invokation(time, repeatRate));
     }
     protected void CancelInvoke(string name)
     {
-        Handler.StopInvokation(GetCallingType(), name);
+        Type type = WrapperHelper.GetCallingType();
+        Handler.StopInvokation(type, name);
     }
     protected void Invoke(string name, float time)
     {
-        Handler.SetInvokation(GetCallingType(), name, new WrappedMethodHandler.Invokation(time, -1));
+        Type type = WrapperHelper.GetCallingType();
+        Handler.SetInvokation(type, name, new WrappedMethodHandler.Invokation(time, -1));
     }
     private WrappedMethodHandler Handler = new();
     internal void HandleInvokations(float elapsed)
@@ -178,7 +181,7 @@ public class WrappedMethodCollection
             {
                 return wrappedMethod;
             }
-            var method = GetWrappedMethod(Type, Method);
+            var method = WrapperHelper.GetWrappedMethod(Type, Method);
             Methods[Method] = method;
             return method;
         }

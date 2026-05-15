@@ -580,9 +580,9 @@ public class PCInputSystem : WrappedBehaviour
     {
         MainWindowFunction = C<GUI.WindowFunction>(ManagePCInputs);
         MouseWindowFunction = C<GUI.WindowFunction>(ManageMouse);
-        MainButton = new Rect(0, 0,75, 75);
+        MainButton = new Rect(0, 0,60, 30);
         MainWindow = new Rect(0, 0, Screen.width/2.5f, Screen.height/4.5f);
-        MouseButton = new Rect(75, 0,150, 75);
+        MouseButton = new Rect(60, 0,85, 30);
     }
 
     public static void SaveConfig(string Path)
@@ -651,7 +651,7 @@ public class PCInputSystem : WrappedBehaviour
             {
                 CurrentMode = Mode.Editing;
             }
-            if (GUI.Button(MouseButton, "Mouse Mode"))
+            if (GUI.Button(MouseButton, "MouseMode"))
             {
                 CurrentMode = Mode.Mouse;
             }
