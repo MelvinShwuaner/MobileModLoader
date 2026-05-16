@@ -1,5 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using NeoModLoader.constants;
 using NeoModLoader.services;
 using UnityEngine;
@@ -8,7 +9,7 @@ using OpCodes = System.Reflection.Emit.OpCodes;
 
 namespace NeoModLoader.AndroidCompatibilityModule;
 
-internal static class GUIStubs //fixes GUI stub methods
+internal static class GUIStubs //fixes GUI stub methods because il2cppinterops bitch ass couldn't do it itself
 {
     private static Harmony harmony;
 
@@ -21,15 +22,14 @@ internal static class GUIStubs //fixes GUI stub methods
         harmony = new Harmony(Others.harmony_id);
         Transpile(AccessTools.Method(typeof(GUILayout), nameof(GUILayout.Space)), SpaceFix);
         Transpile(AccessTools.Method(typeof(GUI), nameof(GUI.DrawTexture), [typeof(Rect), typeof(Texture), typeof(ScaleMode), typeof(bool), typeof(float), typeof(Color), typeof(Color), typeof(Color), typeof(Color), typeof(Vector4), typeof(Vector4), typeof(bool)]), DrawTextureFix);
-        Transpile(AccessTools.Method(typeof(GUILayout), nameof(GUILayout.FlexibleSpace)), FlexibleSpaceFix);
-    }
+        Transpile(AccessTools.Method(typeof(GUILayout), nameof(GUILayout.FlexibleSpace)), FlexibleSpaceFix); }
     static void Space(float pixels)
     {
         GUIUtility.CheckOnGUI();
         if (GUILayoutUtility.current.topLevel.isVertical)
-            GUILayoutUtility.GetRect(0.0f, pixels, GUIHelper.spaceStyle, GUILayout.Height(pixels));
+            GUILayoutUtility.GetRect(0.0f, pixels, spaceStyle, GUILayout.Height(pixels));
         else
-            GUILayoutUtility.GetRect(pixels, 0.0f, GUIHelper.spaceStyle, GUILayout.Width(pixels));
+            GUILayoutUtility.GetRect(pixels, 0.0f, spaceStyle, GUILayout.Width(pixels));
         if (Event.current.type != EventType.Layout)
             return;
         GUILayoutUtility.current.topLevel.entries[GUILayoutUtility.current.topLevel.entries.Count - 1].consideredForMargin = false;
@@ -101,10 +101,19 @@ internal static class GUIStubs //fixes GUI stub methods
         yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GUIStubs), nameof(DrawTexture)));
         yield return new CodeInstruction(OpCodes.Ret);
     }
+    static GUIStyle spaceStyle
+    {
+        get
+        {
+            field ??= new GUIStyle();
+            field.stretchWidth = false;
+            return field;
+        }
+    }
     public static void FlexibleSpace()
     {
         GUIUtility.CheckOnGUI();
-        GUILayoutUtility.GetRect(0.0f, 0.0f, GUIHelper.spaceStyle, new GUILayoutOption((!GUILayoutUtility.current.topLevel.isVertical ? GUIHelper.Layout.ExpandWidth(true) : GUIHelper.Layout.ExpandHeight(true)).type, 10000));
+        GUILayoutUtility.GetRect(0.0f, 0.0f, spaceStyle, new GUILayoutOption((!GUILayoutUtility.current.topLevel.isVertical ? GUIHelper.Layout.ExpandWidth(true) : GUIHelper.Layout.ExpandHeight(true)).type, 10000));
         if (Event.current.type != EventType.Layout)
             return;
         GUILayoutUtility.current.topLevel.entries[GUILayoutUtility.current.topLevel.entries.Count - 1].consideredForMargin = false;
@@ -113,5 +122,61 @@ internal static class GUIStubs //fixes GUI stub methods
     {
         yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GUIStubs), nameof(FlexibleSpace)));
         yield return new CodeInstruction(OpCodes.Ret);
+    }
+    public static Rect DoWindow(
+        int id,
+        Rect screenRect,
+        GUI.WindowFunction func,
+        GUIContent content,
+        GUIStyle style,
+        Il2CppReferenceArray<GUILayoutOption> options)
+    {
+        GUIUtility.CheckOnGUI();
+        layoutedWindow = new LayoutedWindow(func, screenRect, content, options, style);
+        return GUI.Window(id, screenRect, IL2CPPHelper.C<GUI.WindowFunction>(TempDoWindow), content, style);
+    }
+
+    private static LayoutedWindow layoutedWindow;
+    static void TempDoWindow(int id)
+    {
+        layoutedWindow.DoWindow(id);
+    }
+    private sealed class LayoutedWindow
+    {
+        private readonly GUI.WindowFunction m_Func;
+        private readonly Rect m_ScreenRect;
+        private readonly GUILayoutOption[] m_Options;
+        private readonly GUIStyle m_Style;
+
+        internal LayoutedWindow(
+            GUI.WindowFunction f,
+            Rect screenRect,
+            GUIContent content,
+            GUILayoutOption[] options,
+            GUIStyle style)
+        {
+            this.m_Func = f;
+            this.m_ScreenRect = screenRect;
+            this.m_Options = options;
+            this.m_Style = style;
+        }
+
+        public void DoWindow(int windowID)
+        {
+            GUILayoutGroup topLevel = GUILayoutUtility.current.topLevel;
+            if (Event.current.type == EventType.Layout)
+            {
+                topLevel.resetCoords = true;
+                topLevel.rect = this.m_ScreenRect;
+                if (this.m_Options != null)
+                    topLevel.ApplyOptions(this.m_Options);
+                topLevel.isWindow = true;
+                topLevel.windowID = windowID;
+                topLevel.style = this.m_Style;
+            }
+            else
+                topLevel.ResetCursor();
+            this.m_Func.Invoke(windowID);
+        }
     }
 }

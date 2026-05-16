@@ -27,37 +27,24 @@ public class SmoothLoaderHelper
 }
 public static class GUIHelper
 {
-    #if IL2CPP
-    public static GUIStyle spaceStyle
-    {
-        get
-        {
-            field ??= new GUIStyle();
-            field.stretchWidth = false;
-            return field;
-        }
-    }
-    #else
-    public static GUIStyle spaceStyle => GUILayoutUtility.spaceStyle;
-    #endif
     public static class Layout{
 #if IL2CPP
-        public static Rect Window(int id, Rect clientRect, Action<int>  func, string text)
+        public static Rect Window(int id, Rect clientRect, Action<int>  func, string text, params GUILayoutOption[] options)
         {
-            return GUILayout.Window(id, clientRect, func, text);
+            return GUIStubs.DoWindow(id, clientRect, func, GUIContent.Temp(text), GUI.skin.window, options);
         }
-        public static Rect Window(int id, Rect clientRect, Action<int>  func, GUIContent text)
+        public static Rect Window(int id, Rect clientRect, Action<int>  func, GUIContent text, params GUILayoutOption[] options)
         {
-            return GUILayout.Window(id, clientRect, func, text);
+            return GUIStubs.DoWindow(id, clientRect, func, text, GUI.skin.window, options);
         }
 #endif
-        public static Rect Window(int id, Rect clientRect, GUI.WindowFunction  func, string text)
+        public static Rect Window(int id, Rect clientRect, GUI.WindowFunction  func, string text,  params GUILayoutOption[] options)
         {
-            return GUILayout.Window(id, clientRect, func, text);
+            return GUILayout.Window(id, clientRect, func, text, options);
         }
-        public static Rect Window(int id, Rect clientRect, GUI.WindowFunction func, GUIContent text)
+        public static Rect Window(int id, Rect clientRect, GUI.WindowFunction func, GUIContent text, params GUILayoutOption[] options)
         {
-            return GUILayout.Window(id, clientRect, func, text);
+            return GUILayout.Window(id, clientRect, func, text, options);
         }
         public static GUILayoutOption MinWidth(float minWidth) //cuz the original functions dont fucking work for the most BS reason
         {
