@@ -4,6 +4,7 @@ using NeoModLoader.services;
 using Newtonsoft.Json;
 using UnityEngine;
 using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using Object = UnityEngine.Object;
 using Vector2 = UnityEngine.Vector2;
 using Vector = System.Numerics.Vector2;
 namespace NeoModLoader.AndroidCompatibilityModule.PCInputSystem;
@@ -350,6 +351,11 @@ public static class Helper
     {
         return b ? "Enabled" : "Disabled";
     }
+
+    public static bool IsPCInputSystem(this GameObject obj)
+    {
+        return obj.Equals(PCInputSystem.Instance.gameObject);
+    }
 }
 
 public class PCInputSystem : WrappedBehaviour
@@ -568,11 +574,12 @@ public class PCInputSystem : WrappedBehaviour
     private static GUI.WindowFunction MouseWindowFunction;
     private static PCInputConfig Config;
     #endregion
-    public static void Init()
+    internal static void Init()
     {
         Harmony.CreateAndPatchAll(typeof(PCInputPatches), Others.harmony_id);
         Config = PCButtonSettings.LoadFromPath(Paths.PCInputConfigPath).FromSettings();
-        Instance = WorldBoxMod.Transform.gameObject.AddComponent<PCInputSystem>();
+        Instance = new GameObject("PCInputSystem").AddComponent<PCInputSystem>();
+        Object.DontDestroyOnLoad(Instance.gameObject);
         InitGUI();
     }
 

@@ -26,6 +26,7 @@ public static class AndroidHelper
         TranspilerSupport.TranspilerSupport.Initialize(new Harmony(Others.harmony_id));
         PCInputSystem.PCInputSystem.Init();
         WrapperHelper.Init();
+        GUIStubs.Init();
     }
     /// <summary>
      /// Reads a file in the apk assets directory

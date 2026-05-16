@@ -27,6 +27,19 @@ public class SmoothLoaderHelper
 }
 public static class GUIHelper
 {
+    #if IL2CPP
+    public static GUIStyle spaceStyle
+    {
+        get
+        {
+            field ??= new GUIStyle();
+            field.stretchWidth = false;
+            return field;
+        }
+    }
+    #else
+    public static GUIStyle spaceStyle => GUILayoutUtility.spaceStyle;
+    #endif
     public static class Layout{
 #if IL2CPP
         public static Rect Window(int id, Rect clientRect, Action<int>  func, string text)
@@ -45,6 +58,35 @@ public static class GUIHelper
         public static Rect Window(int id, Rect clientRect, GUI.WindowFunction func, GUIContent text)
         {
             return GUILayout.Window(id, clientRect, func, text);
+        }
+        public static GUILayoutOption MinWidth(float minWidth) //cuz the original functions dont fucking work for the most BS reason
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.minWidth, minWidth);
+        }
+
+        public static GUILayoutOption MaxWidth(float maxWidth)
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.maxWidth, maxWidth);
+        }
+
+        public static GUILayoutOption MinHeight(float minHeight)
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.minHeight, minHeight);
+        }
+
+        public static GUILayoutOption MaxHeight(float maxHeight)
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.maxHeight, maxHeight);
+        }
+
+        public static GUILayoutOption ExpandWidth(bool expand)
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.stretchWidth, (expand ? 1 : 0));
+        }
+
+        public static GUILayoutOption ExpandHeight(bool expand)
+        {
+            return new GUILayoutOption(GUILayoutOption.Type.stretchHeight, (expand ? 1 : 0));
         }
     }
     #if IL2CPP
