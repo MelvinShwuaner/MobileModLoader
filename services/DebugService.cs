@@ -185,7 +185,6 @@ public class HarmonyPatcher //any harmony patches causing you trouble? this lets
         try
         {
             harmony.CreateClassProcessor(type, true).Patch();
-            harmony.CreateClassProcessor(type, false).Patch();
         }
         catch (Exception e)
         {
