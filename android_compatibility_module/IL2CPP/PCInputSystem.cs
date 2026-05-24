@@ -615,23 +615,16 @@ public class PCInputSystem : WrappedBehaviour
         {
             var button = pair.Value;
             var state = button.State;
-
             Rect rect = button.ButtonRect;
-
             bool pressed = state == KeyState.Hold || state == KeyState.Pressed;
-
             if (pressed || SelectedInput == button)
             {
                 rect.x -= 5;
                 rect.y -= 5;
                 rect.width += 5;
                 rect.height += 5;
-                GUI.Box(rect, button.Name);
             }
-            else
-            {
-                GUI.Box(rect, button.Name);
-            }
+            GUI.Box(rect, button.Name);
         }
     }
     internal static GUIStyle BoxStyle;
@@ -671,9 +664,7 @@ public class PCInputSystem : WrappedBehaviour
         foreach (var pair in Config.Inputs)
         {
             var button = pair.Value;
-
             bool inside = false;
-
             foreach (var Touch in Input.touches)
             {
                 var touchPos = Touch.position.ToGUI();
@@ -684,7 +675,6 @@ public class PCInputSystem : WrappedBehaviour
                     break;
                 }
             }
-
             if (inside)
                 button.Press();
             else
@@ -727,9 +717,7 @@ public class PCInputSystem : WrappedBehaviour
             return;
 
         GUILayout.Label("Choose Key:");
-
         scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(200));
-
         foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
         {
             if (GUILayout.Button(key.ToString()))
