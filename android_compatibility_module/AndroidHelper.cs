@@ -23,7 +23,7 @@ public static class AndroidHelper
     internal static void Init()
     {
         Log("Initializing android support module");
-        TranspilerSupport.TranspilerSupport.Initialize(new Harmony(Others.harmony_id));
+        //TranspilerSupport.TranspilerSupport.Initialize();
         PCInputSystem.PCInputSystem.Init();
         WrapperHelper.Init();
         GUIStubs.Init();
