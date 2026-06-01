@@ -165,4 +165,9 @@ public static partial class Extentions
 		}
 		return pList[num];
 	}
+
+	public static int FindIndex<T>(this Il2CppSystem.Collections.Generic.List<T> pList, Func<T, bool> pCondition)
+	{
+		return pList.FindIndex(pCondition);
+	}
 }
