@@ -1,5 +1,4 @@
-﻿extern alias Loader;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NeoModLoader.MobileCompatibilityModule;
 using NeoModLoader.api;

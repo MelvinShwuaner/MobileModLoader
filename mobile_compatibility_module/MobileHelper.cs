@@ -1,9 +1,6 @@
-extern alias Loader;
-using HarmonyLib;
-using NeoModLoader.constants;
-
 namespace NeoModLoader.MobileCompatibilityModule;
 #if IL2CPP
+extern alias Loader;
 using Loader::ModLoader;
 #endif
 public static class MobileHelper

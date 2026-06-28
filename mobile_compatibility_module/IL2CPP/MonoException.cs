@@ -1,11 +1,10 @@
-extern alias Loader;
 using Il2CppInterop.Runtime.Injection;
 
 namespace NeoModLoader.MobileCompatibilityModule;
 /// <summary>
 /// represents a mono exception for IL2CPP
 /// </summary>
-[Loader::ModLoader.RegisterTypeInIl2Cpp]
+[RegisterTypeInIl2Cpp]
 public class MonoException(IntPtr ptr) : Il2CppSystem.Exception(ptr)
 {
     private MonoException() : this(ClassInjector.DerivedConstructorPointer<MonoException>())
