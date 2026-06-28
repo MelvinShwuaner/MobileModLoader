@@ -7,7 +7,7 @@ using NeoModLoader.utils.authentication;
 using RSG;
 
 namespace NeoModLoader.services;
-using NeoModLoader.AndroidCompatibilityModule;
+using MobileCompatibilityModule;
 /// <summary>
 ///     Authentication service for mod upload.
 /// </summary>

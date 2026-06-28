@@ -1,12 +1,12 @@
 
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using NeoModLoader.General.UI.Prefabs;
 using NeoModLoader.General.UI.Window.Layout;
 using NeoModLoader.utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+
 namespace NeoModLoader.General.UI.Window;
 
 /// <summary>

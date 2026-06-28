@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace NeoModLoader.services;
-using NeoModLoader.AndroidCompatibilityModule;
+using MobileCompatibilityModule;
 /// <summary>
 /// Service of mod compiling and loading. 
 /// </summary>
@@ -52,7 +52,7 @@ public static class ModCompileLoadService
         List<MetadataReference> list = pDefaultInc.ToList();
         list.AddRange(pAddInc.Select(inc => MetadataReference.CreateFromFile(inc)));
         LoadAddInc();
-        if (pModDecl.UsePublicizedAssembly && !Config.isAndroid)
+        if (pModDecl.UsePublicizedAssembly && !Config.isMobile)
         {
             list.Add(_publicized_assembly_ref);
         }
@@ -152,7 +152,7 @@ public static class ModCompileLoadService
             foreach (var inc in pAddInc)
             {
                 string file_name = Path.GetFileName(inc);
-                if (file_name == "Assembly-CSharp.dll" && !Config.isAndroid)
+                if (file_name == "Assembly-CSharp.dll" && !Config.isMobile)
                 {
                     continue;
                 }
@@ -309,9 +309,9 @@ public static class ModCompileLoadService
 
         var default_ref_path_list = new List<string>();
         default_ref_path_list.AddRange(Directory.GetFiles(Paths.NMLAssembliesPath, "*.dll"));
-        if (Config.isAndroid)
+        if (Config.isMobile)
         {
-            default_ref_path_list.AddRange(Directory.GetFiles(Paths.MelonAssemblies, "*.dll"));
+            default_ref_path_list.AddRange(Directory.GetFiles(Paths.CoreAssemblies, "*.dll"));
             default_ref_path_list.AddRange(Directory.GetFiles(Paths.Il2CppAssemblies, "*.dll"));
         }
         default_ref_path_list.AddRange(Directory.GetFiles(Paths.ManagedPath, "*.dll"));
@@ -504,7 +504,7 @@ public static class ModCompileLoadService
         bool all_success = true;
         foreach (var mod_assembly in mod_assemblies)
         {
-            MelonLoader.RegisterTypeInIl2Cpp.RegisterAssembly(mod_assembly);
+            RegisterTypeInIl2Cpp.RegisterAssembly(mod_assembly);
             GameObject mod_instance;
             bool any_loaded = false;
             foreach (var type in mod_assembly.GetTypes())

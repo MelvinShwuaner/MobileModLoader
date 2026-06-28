@@ -1,9 +1,5 @@
-﻿#if !IL2CPP
-using FMOD;
-#else
-using Il2CppFMOD;
-#endif
-using NeoModLoader.AndroidCompatibilityModule;
+﻿using FMOD;
+using NeoModLoader.MobileCompatibilityModule;
 using NeoModLoader.services;
 using NeoModLoader.utils.Collections;
 using Newtonsoft.Json;

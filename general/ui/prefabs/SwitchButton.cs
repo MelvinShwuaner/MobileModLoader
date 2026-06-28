@@ -1,9 +1,9 @@
 
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+
 namespace NeoModLoader.General.UI.Prefabs;
 
 public class SwitchButton : APrefab<SwitchButton>

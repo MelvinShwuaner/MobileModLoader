@@ -1,11 +1,5 @@
-#if !IL2CPP
 using FMOD;
 using FMODUnity;
-#else
-using Il2CppFMOD;
-using Il2CppFMODUnity;
-using FMOD = Il2CppFMOD;
-#endif
 using HarmonyLib;
 using NeoModLoader.constants;
 using UnityEngine;

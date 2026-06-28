@@ -3,7 +3,7 @@ using NeoModLoader.utils;
 using UnityEngine;
 using UnityEngine.UI;
 namespace NeoModLoader.api;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static MobileCompatibilityModule.IL2CPPHelper;
 /// <summary>
 ///     This class is used to create a wide window
 /// </summary>

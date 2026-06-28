@@ -25,49 +25,81 @@
   <!-- Used for HarmonyPatch, Authentication, Auto-update, Hotfix, Steam workshop-->
     <ItemGroup>
       <Reference Include="0Harmony">
-        <HintPath>android-assembly-dependencies\0Harmony.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\0Harmony.dll</HintPath>
       </Reference>
-      <Reference Include="Il2CppInterop.Common">
-        <HintPath>..\..\..\Desktop\melon_data\MelonLoader\net8\Il2CppInterop.Common.dll</HintPath>
+      <Reference Include="DOTween">
+        <HintPath>mobile-assembly-dependencies\DOTween.dll</HintPath>
+      </Reference>
+      <Reference Include="Facepunch.Steamworks.Posix">
+        <HintPath>mobile-assembly-dependencies\Facepunch.Steamworks.Posix.dll</HintPath>
+        <Aliases>unixsteamwork</Aliases>
+      </Reference>
+      <Reference Include="FMODUnity">
+        <HintPath>mobile-assembly-dependencies\FMODUnity.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnityResonance">
+        <HintPath>mobile-assembly-dependencies\FMODUnityResonance.dll</HintPath>
       </Reference>
       <Reference Include="Il2CppInterop.Runtime">
-        <HintPath>android-assembly-dependencies\Il2CppInterop.Runtime.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Il2CppInterop.Runtime.dll</HintPath>
       </Reference>
       <Reference Include="Il2Cppmscorlib">
-        <HintPath>android-assembly-dependencies\Il2Cppmscorlib.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Il2Cppmscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem">
+        <HintPath>mobile-assembly-dependencies\Il2CppSystem.dll</HintPath>
       </Reference>
       <Reference Include="Il2CppSystem.Core">
-        <HintPath>android-assembly-dependencies\Il2CppSystem.Core.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Il2CppSystem.Core.dll</HintPath>
       </Reference>
-      <Reference Include="MelonLoader">
-        <HintPath>android-assembly-dependencies\MelonLoader.dll</HintPath>
+      <Reference Include="ModLoader">
+        <HintPath>mobile-assembly-dependencies\ModLoader.dll</HintPath>
+        <Aliases>Loader</Aliases>  
       </Reference>
       <Reference Include="Mono.Cecil">
-        <HintPath>android-assembly-dependencies\Mono.Cecil.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Mono.Cecil.dll</HintPath>
       </Reference>
       <Reference Include="Mono.Cecil.Pdb">
-        <HintPath>android-assembly-dependencies\Mono.Cecil.Pdb.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Mono.Cecil.Pdb.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.Core">
-        <HintPath>android-assembly-dependencies\MonoMod.Core.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\MonoMod.Core.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.RuntimeDetour">
-        <HintPath>android-assembly-dependencies\MonoMod.RuntimeDetour.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\MonoMod.RuntimeDetour.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.Utils">
-        <HintPath>android-assembly-dependencies\MonoMod.Utils.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\MonoMod.Utils.dll</HintPath>
       </Reference>
         <Reference Include="Newtonsoft.Json">
           <HintPath>assembly-dependencies\Newtonsoft.Json.dll</HintPath>
         </Reference>
-      <Reference Include="RSG">
-        <HintPath>android-assembly-dependencies\Il2CppRSG.dll</HintPath>
-      </Reference>
+        <Reference Include="RSG">
+          <HintPath>mobile-assembly-dependencies\RSG.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+          <HintPath>mobile-assembly-dependencies\UnityEngine.AssetBundleModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+          <HintPath>mobile-assembly-dependencies\UnityEngine.AudioModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+          <HintPath>mobile-assembly-dependencies\UnityEngine.ImageConversionModule.dll</HintPath>
+        </Reference>
       <Reference Include="UnityEngine.IMGUIModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.IMGUIModule.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\UnityEngine.IMGUIModule.dll</HintPath>
       </Reference>
-      <Reference Include="UnityEngine.UnityWebRequestModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>mobile-assembly-dependencies\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>mobile-assembly-dependencies\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>mobile-assembly-dependencies\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>mobile-assembly-dependencies\UnityEngine.UIModule.dll</HintPath>
       </Reference>
     </ItemGroup>
 
@@ -91,43 +123,13 @@
   <!-- Used for UI and other services -->
   <ItemGroup>
       <Reference Include="Assembly-CSharp">
-        <HintPath>android-assembly-dependencies\Assembly-CSharp.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\Assembly-CSharp.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp-firstpass">
-          <HintPath>android-assembly-dependencies\Assembly-CSharp-firstpass.dll</HintPath>
+          <HintPath>mobile-assembly-dependencies\Assembly-CSharp-firstpass.dll</HintPath>
       </Reference>
-      <Reference Include="strings">
-          <HintPath>android-assembly-dependencies\Il2Cppstrings.dll</HintPath>
-      </Reference>
-	  <Reference Include="DOTween">
-		<HintPath>android-assembly-dependencies\Il2CppDOTween.dll</HintPath>
-	  </Reference>
-      <Reference Include="FMODUnity">
-          <HintPath>android-assembly-dependencies\Il2CppFMODUnity.dll</HintPath>
-      </Reference>
-	  <Reference Include="UnityEngine.AudioModule">
-		 <HintPath>android-assembly-dependencies\UnityEngine.AudioModule.dll</HintPath>
-	  </Reference>
       <Reference Include="UnityEngine.CoreModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.ImageConversionModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.ImageConversionModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.InputLegacyModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.InputLegacyModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.JSONSerializeModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.JSONSerializeModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TextRenderingModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.TextRenderingModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UI">
-        <HintPath>android-assembly-dependencies\UnityEngine.UI.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UIModule">
-        <HintPath>android-assembly-dependencies\UnityEngine.UIModule.dll</HintPath>
+        <HintPath>mobile-assembly-dependencies\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
     </ItemGroup>
 
@@ -224,9 +226,9 @@
   
     <ItemGroup>
       <Compile Remove="assembly-dependencies\**" />
-      <Compile Remove="AndroidCompatibilityModule\Stubs\**" />
-      <Compile Remove="android_compatibility_module\Stubs\**" />
-      <Compile Remove="android_compatibility_module\Mono\**" />
+      <Compile Remove="MobileCompatibilityModule\Stubs\**" />
+      <Compile Remove="mobile_compatibility_module\Stubs\**" />
+      <Compile Remove="mobile_compatibility_module\Mono\**" />
       <Compile Remove="services\WorkShop\**" />
       <Compile Remove="services\ModWorkshopServiceUnix.cs" />
       <Compile Remove="services\ModWorkshopServiceWindows.cs" />

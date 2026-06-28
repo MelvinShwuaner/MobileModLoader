@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using NeoModLoader.utils;
 namespace NeoModLoader.api;
-using NeoModLoader.AndroidCompatibilityModule;
+using MobileCompatibilityModule;
 /// <summary>
 /// Abstract List Window Item
 /// </summary>

@@ -1,4 +1,4 @@
-﻿using NeoModLoader.AndroidCompatibilityModule;
+﻿using NeoModLoader.MobileCompatibilityModule;
 using NeoModLoader.services;
 using Newtonsoft.Json;
 using System.Reflection;

@@ -1,7 +1,6 @@
 using System.Collections;
 
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using NeoModLoader.api;
 using NeoModLoader.constants;
 using NeoModLoader.General;
@@ -42,7 +41,7 @@ public class ModListWindow : AbstractListWindow<ModListWindow, IMod>
     /// <inheritdoc cref="AbstractListWindow{T,TItem}.Init" />
     protected override void Init()
     {
-        if (!Config.isAndroid)
+        if (!Config.isMobile)
         {
             GameObject workshopButton =
                 CreateGameObject("WorkshopButton", typeof(Image), typeof(Button), typeof(TipButton));

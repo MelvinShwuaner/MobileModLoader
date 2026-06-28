@@ -234,7 +234,7 @@ public static class AssetBundleUtils
 
         using Stream file = file_info.OpenRead();
 
-        var ab = new WrappedAssetBundle(AssetBundle.LoadFromStream(file));
+        var ab = new WrappedAssetBundle(AssetBundle.LoadFromFile(pPath));
 
         LoadedAssetBundlesByPath[file_info.FullName] = ab;
         LoadedAssetBundles[ab.Name] = ab;

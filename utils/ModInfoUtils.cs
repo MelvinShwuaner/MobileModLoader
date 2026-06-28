@@ -1,7 +1,5 @@
-#if !IL2CPP
 extern alias unixsteamwork;
 using unixsteamwork::Steamworks;
-#endif
 using System.IO.Compression;
 using System.Net;
 using System.Reflection;
@@ -186,7 +184,7 @@ internal static class ModInfoUtils
         }
 
         string[] workshop_mod_folders;
-        if (Others.is_editor || Config.isAndroid)
+        if (Others.is_editor || Config.isMobile)
         {
             goto SKIP_WORKSHOP;
         }

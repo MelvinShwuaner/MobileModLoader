@@ -10,7 +10,7 @@ internal static class UIManager
     {
         InformationWindow.CreateWindow("Information", "Information Title");
         ModListWindow.CreateAndInit("NeoModList");
-        if(!Config.isAndroid){
+        if(!Config.isMobile){
             NewModListWindow.CreateAndInit("NMLMenu");
             WorkshopModListWindow.CreateAndInit("WorkshopMods");
             ModUploadWindow.CreateAndInit("ModUpload");

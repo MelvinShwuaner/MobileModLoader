@@ -3,14 +3,13 @@ using NeoModLoader.General;
 using NeoModLoader.General.UI.Prefabs;
 using System.Globalization;
 
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using NeoModLoader.utils;
 namespace NeoModLoader.ui;
-using NeoModLoader.AndroidCompatibilityModule;
+using MobileCompatibilityModule;
 /// <summary>
 ///     Configuration window for <see cref="ModConfig" />
 /// </summary>

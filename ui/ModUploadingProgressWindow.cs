@@ -1,7 +1,7 @@
 
 using NeoModLoader.api;
 using NeoModLoader.General;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using UnityEngine;
 using UnityEngine.UI;
 

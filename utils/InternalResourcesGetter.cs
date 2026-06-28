@@ -17,7 +17,7 @@ internal static class InternalResourcesGetter
     private static long   last_write_time;
 
     public static readonly string Resource =
-        Config.isAndroid ? "NeoModLoader_mobile.resources" : "NeoModLoader.resources";
+        Config.isMobile ? "NeoModLoader_mobile.resources" : "NeoModLoader.resources";
     private static Texture2D LoadManifestTexture(string path_under_resources)
     {
         var s = Assembly.GetExecutingAssembly()

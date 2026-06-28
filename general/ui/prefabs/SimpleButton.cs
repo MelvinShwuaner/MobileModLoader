@@ -1,14 +1,9 @@
-#if !IL2CPP
 using DG.Tweening;
-#else
-using Il2CppDG.Tweening;
-#endif
-
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
+
 namespace NeoModLoader.General.UI.Prefabs;
 
 /// <summary>

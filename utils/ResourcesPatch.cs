@@ -2,7 +2,7 @@ using System.Globalization;
 using HarmonyLib;
 using NeoModLoader.api.exceptions;
 using NeoModLoader.services;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using UnityEngine;
 using UnityEngine.U2D;
 using Object = UnityEngine.Object;

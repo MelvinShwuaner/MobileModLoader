@@ -1,7 +1,7 @@
 
 using NeoModLoader.constants;
 using UnityEngine;
-using NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.MobileCompatibilityModule;
 namespace NeoModLoader.api;
 
 /// <summary>

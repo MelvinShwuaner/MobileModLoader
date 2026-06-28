@@ -6,7 +6,7 @@ internal static class ExternalModInstallService
 {
     public static async void CheckExternalModInstall()
     {
-        if (Config.isAndroid)
+        if (Config.isMobile)
         {
             return;
         }

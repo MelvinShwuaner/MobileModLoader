@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+﻿extern alias Loader;
+using System.Reflection;
 using HarmonyLib;
-using NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.MobileCompatibilityModule;
 using NeoModLoader.api;
 using NeoModLoader.constants;
 using NeoModLoader.General;
@@ -15,7 +16,7 @@ namespace NeoModLoader;
 /// <summary>
 /// Main class
 /// </summary>
-[MelonLoader.RegisterTypeInIl2Cpp]
+[RegisterTypeInIl2Cpp]
 public class WorldBoxMod : BaseBehaviour
 {
     public WorldBoxMod(IntPtr ptr) : base(ptr)
@@ -78,14 +79,8 @@ public class WorldBoxMod : BaseBehaviour
         InactiveTransform = new GameObject("Inactive").transform;
         InactiveTransform.SetParent(Transform);
         InactiveTransform.gameObject.SetActive(false);
-        if (Config.isAndroid)
-        {
-            GameObject services = GameObject.Find("Services");
-            GameObject modloader = new GameObject("ModLoader");
-            modloader.transform.parent = services.transform;
-        }
         LogService.Init();
-        if (ReflectionHelper.IsAssemblyLoaded("0Harmony") && !Config.isAndroid) {
+        if (ReflectionHelper.IsAssemblyLoaded("0Harmony") && !Config.isMobile) {
             UnityExplorerFix();
         }
         fileSystemInitialize();
@@ -105,7 +100,7 @@ public class WorldBoxMod : BaseBehaviour
         }
 
         initialized = true;
-        if(!Config.isAndroid)
+        if(!Config.isMobile)
             ModUploadAuthenticationService.AutoAuth();
         
         HarmonyUtils._init();
@@ -123,7 +118,7 @@ public class WorldBoxMod : BaseBehaviour
             WrappedPowersTab._init();
             NCMSCompatibleLayer.PreInit();
             ModInfoUtils.InitializeModCompileCache();
-            AndroidHelper.Init();
+            MobileHelper.Init();
         }, "Initialize NeoModLoader");
         ModEnablePlan startup_enable_plan = null;
         List<ModDependencyNode> mod_nodes = new();
@@ -260,7 +255,7 @@ public class WorldBoxMod : BaseBehaviour
             File.Create(Paths.ModCompileRecordPath).Close();
             LogService.LogInfo($"Create mod_compile_records.json at {Paths.ModCompileRecordPath}");
         }
-        string name = Config.isAndroid ? "_mobile" : "";
+        string name = Config.isMobile ? "_mobile" : "";
         void extractAssemblies()
         {
             var resources = NeoModLoaderAssembly.GetManifestResourceNames();

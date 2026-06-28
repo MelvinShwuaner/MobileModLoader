@@ -33,8 +33,8 @@ public static class Others
     /// weather the game is IL2CPP or not
     /// </summary>
     #if IL2CPP
-    public static readonly bool IsIL2CPP = true;
+    public const bool IsIL2CPP = true;
     #else
-    public static readonly bool IsIL2CPP = false;
+    public const bool IsIL2CPP = false;
     #endif
 }

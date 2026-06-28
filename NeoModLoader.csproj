@@ -212,6 +212,10 @@
         <None Remove="android-assembly-dependencies\**" />
         <EmbeddedResource Remove="android_compatibility_module\IL2CPP\**" />
         <None Remove="android_compatibility_module\IL2CPP\**" />
+        <EmbeddedResource Remove="mobile_compatibility_module\IL2CPP\**" />
+        <None Remove="mobile_compatibility_module\IL2CPP\**" />
+        <EmbeddedResource Remove="mobile-assembly-dependencies\**" />
+        <None Remove="mobile-assembly-dependencies\**" />
     </ItemGroup>
   
     <ItemGroup>
@@ -229,10 +233,8 @@
     </ItemGroup>
   
     <ItemGroup>
-      <Compile Remove="android-assembly-dependencies\**" />
-      <Compile Remove="AndroidCompatibilityModule\IL2CPPWrapper\**" />
-      <Compile Remove="android_compatibility_module\IL2CPPWrapper\**" />
-      <Compile Remove="android_compatibility_module\IL2CPP\**" />
+      <Compile Remove="mobile_compatibility_module\IL2CPP\**" />
+      <Compile Remove="mobile-assembly-dependencies\**" />
     </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

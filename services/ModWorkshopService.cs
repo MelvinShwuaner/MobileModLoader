@@ -19,7 +19,7 @@ internal static class ModWorkshopService
 
     public static void Init()
     {
-        if (Config.isAndroid)
+        if (Config.isMobile)
         {
             workshopServiceBackend = new ModWorkshopServiceMobile();
             return;

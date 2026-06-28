@@ -1,13 +1,13 @@
 using System.Reflection.Emit;
 using HarmonyLib;
-using NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.MobileCompatibilityModule;
 using NeoModLoader.constants;
 using NeoModLoader.services;
 using NeoModLoader.utils;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Events;
-using static NeoModLoader.AndroidCompatibilityModule.IL2CPPHelper;
+using static NeoModLoader.MobileCompatibilityModule.IL2CPPHelper;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 namespace NeoModLoader.General.UI.Tab;

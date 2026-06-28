@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using NeoModLoader.constants;
 using NeoModLoader.utils;
 using UnityEngine;
-using NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.MobileCompatibilityModule;
 namespace NeoModLoader.services;
 /// <summary>
 /// It is a service to log message to console or Unity Console
@@ -160,7 +160,7 @@ public static class LogService
     {
         if (Others.unity_player_enabled)
         {
-            AndroidHelper.LogError("[NML]: " + message);
+            MobileHelper.LogError("[NML]: " + message);
         }
         else
         {
@@ -175,7 +175,7 @@ public static class LogService
     {
         if (Others.unity_player_enabled)
         {
-            AndroidHelper.LogWarning("[NML]: " + message);
+            MobileHelper.LogWarning("[NML]: " + message);
         }
         else
         {
@@ -190,7 +190,7 @@ public static class LogService
     {
         if (Others.unity_player_enabled)
         {
-            AndroidHelper.Log("[NML]: " + message);
+            MobileHelper.Log("[NML]: " + message);
         }
         else
         {

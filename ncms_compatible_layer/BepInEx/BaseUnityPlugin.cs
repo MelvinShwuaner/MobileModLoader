@@ -1,6 +1,6 @@
 
 using UnityEngine;
-using NeoModLoader.AndroidCompatibilityModule;
+using NeoModLoader.MobileCompatibilityModule;
 namespace BepInEx;
 
 #pragma warning disable CS1591 // No comment for NCMS compatible layer
