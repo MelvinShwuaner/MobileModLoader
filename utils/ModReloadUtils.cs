@@ -129,7 +129,8 @@ internal static class ModReloadUtils
             return false;
         }
         return methodDefinition.CustomAttributes.Any(
-            attribute => attribute.AttributeType.FullName == typeof(HotfixableAttribute).FullName
+            attribute => attribute.AttributeType.FullName == typeof(HotfixableAttribute).FullName 
+                         || methodDefinition.DeclaringType.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == typeof(HotfixableAttribute).FullName)
         );
     }
 
